@@ -1,0 +1,48 @@
+{
+  "name": "blog-api-project",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Build a blog API and a third-party service backend to interact with the API",
+  "keywords": [
+    "backend",
+    "API",
+    "blog",
+    "Node.js",
+    "template engine"
+  ],
+  "author": "Denis Dezest <denis.dezest@gmail.com>",
+  "repository": "",
+  "license": "ISC",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev:app": "nodemon ./src/index.js",
+    "dev:server": "nodemon ./src/server.js",
+    "dev": "concurrently \"yarn run dev:app\" \"yarn run dev:server\"",
+    "format": "prettier --plugin=prettier-plugin-ejs --write .",
+    "lint": "eslint --fix .",
+    "format:lint": "yarn run format && yarn run lint"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.0.2",
+    "@eslint/js": "^9.0.0",
+    "concurrently": "^8.2.2",
+    "eslint": "8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "globals": "^15.0.0",
+    "jsonc-eslint-parser": "^2.4.0",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-ejs": "^1.0.3",
+    "vitest": "^1.5.3"
+  }
+}
