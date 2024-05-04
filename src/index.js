@@ -12,6 +12,7 @@ import {
   createPost,
   getPostById,
   sortPostsByDate,
+  updatePostById,
 } from './utils/posts.js';
 import isEmpty from './utils/checkIsEmpty.js';
 
@@ -20,7 +21,7 @@ const app = express();
 const port = parseInt(API_SERVER_PORT, 10) ?? 8000;
 
 // In-memory data store
-const posts = initialPosts;
+let posts = initialPosts;
 let nextPostId = 4;
 
 // Application-level middlewares
@@ -55,6 +56,19 @@ app.post('/posts', (req, res) => {
   posts.push(newPost);
   nextPostId += 1;
   return res.json(newPost);
+});
+
+// PATCH a post when you just want to update one parameter
+app.patch('/posts/:id', (req, res) => {
+  const postId = parseInt(req.params.id, 10);
+  const updatedPost = updatePostById(posts, postId, req.body);
+  if (isEmpty(updatedPost)) {
+    return res
+      .status(404)
+      .json({ message: `No existing post with id ${postId}...` });
+  }
+  posts = posts.map((post) => (post.id === postId ? updatedPost : post));
+  return res.json(updatedPost);
 });
 
 // App server
