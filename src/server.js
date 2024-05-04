@@ -55,6 +55,16 @@ app.get('/edit/:id', async (req, res) => {
   }
 });
 
+// Route to create a new post
+app.post('/api/posts', async (req, res) => {
+  try {
+    await axios.post(`${API_URL}/posts`, req.body);
+    res.redirect('/');
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating post' });
+  }
+});
+
 // App server
 app.listen(port, () => {
   console.info(
