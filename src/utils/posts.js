@@ -132,4 +132,5 @@ export const updatePostById = (posts, postId, { title, author, content }) => {
  * @param {number} postId
  * @returns {post[]}
  */
-export const deletePostById = (posts, postId) => posts.filter((post) => ({ ...post }).id !== postId);
+export const deletePostById = (posts, postId) =>
+  posts.filter((post) => ({ ...post }).id !== postId);

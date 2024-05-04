@@ -26,11 +26,11 @@ app.use(express.json());
 
 // Routes
 
-// Main page
+// Route to render the main page
 app.get('/', async (req, res) => {
   try {
     const response = await axios.get(`${API_URL}/posts`);
-    res.render('index', { title: response.data });
+    res.render('index', { posts: response.data });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching posts' });
   }
