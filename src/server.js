@@ -65,6 +65,16 @@ app.post('/api/posts', async (req, res) => {
   }
 });
 
+// Route to partially update a post
+app.post('/api/posts/:id', async (req, res) => {
+  try {
+    await axios.patch(`${API_URL}/posts/${req.params.id}`, req.body);
+    res.redirect('/');
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating post' });
+  }
+});
+
 // App server
 app.listen(port, () => {
   console.info(
