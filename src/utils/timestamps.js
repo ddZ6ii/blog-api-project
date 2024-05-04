@@ -3,6 +3,6 @@
  * @param {date} isoStringDate
  * @returns {number}
  */
-export const toTimeStamp = (isoStringDate) => {
-  return Date.parse(isoStringDate);
-};
+const toTimeStamp = (isoStringDate) => Date.parse(isoStringDate);
+
+export default toTimeStamp;

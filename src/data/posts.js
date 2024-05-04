@@ -1,4 +1,4 @@
-export default [
+const initialPosts = [
   {
     id: 1,
     title: 'The Rise of Decentralized Finance',
@@ -24,3 +24,5 @@ export default [
     date: '2023-08-10T09:15:00Z',
   },
 ];
+
+export default initialPosts;

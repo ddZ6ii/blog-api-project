@@ -19,6 +19,7 @@
     "dev:app": "nodemon ./src/index.js",
     "dev:server": "nodemon ./src/server.js",
     "dev": "concurrently \"yarn run dev:app\" \"yarn run dev:server\"",
+    "test": "vitest --pool=forks --typecheck",
     "format": "prettier --plugin=prettier-plugin-ejs --write .",
     "lint": "eslint --fix .",
     "format:lint": "yarn run format && yarn run lint"

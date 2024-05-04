@@ -4,6 +4,7 @@
 
 import express from 'express';
 import axios from 'axios';
+import chalk from 'chalk';
 import 'dotenv/config';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -15,7 +16,6 @@ const port = parseInt(APP_SERVER_PORT, 10) ?? 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Application settings properties
-/* eslint no-underscore-dangle: ["error", { "allow": ["__dirname"] }] */
 app.set('views', join(__dirname, './views'));
 app.set('view engine', 'ejs');
 
@@ -38,5 +38,7 @@ app.get('/', async (req, res) => {
 
 // App server
 app.listen(port, () => {
-  console.info(`Backend server is running on http://localhost:${port}...`);
+  console.info(
+    chalk.yellow(`Backend server is running on http://localhost:${port}...`),
+  );
 });
