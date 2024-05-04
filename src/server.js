@@ -75,6 +75,16 @@ app.post('/api/posts/:id', async (req, res) => {
   }
 });
 
+// Route to delete a post
+app.get('/api/posts/delete/:id', async (req, res) => {
+  try {
+    await axios.delete(`${API_URL}/posts/${req.params.id}`);
+    res.redirect('/');
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting post' });
+  }
+});
+
 // App server
 app.listen(port, () => {
   console.info(
