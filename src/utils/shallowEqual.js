@@ -5,7 +5,8 @@
  * @returns {boolean}
  */
 const shallowEqual = (obj1, obj2) => {
-  if (obj1 == null || obj2 == null) throw new Error('Input arguments required.');
+  if (obj1 == null || obj2 == null)
+    throw new Error('Input arguments required.');
   if (typeof obj1 !== typeof obj2) return false;
   const keys1 = Object.keys(obj1);
   const keys2 = Object.keys(obj2);

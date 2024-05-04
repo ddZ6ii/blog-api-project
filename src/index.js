@@ -8,8 +8,10 @@ import chalk from 'chalk';
 import initialPosts from './data/posts.js';
 
 import {
+  checkIdValidity,
   checkSortParamValidity,
   createPost,
+  deletePostById,
   getPostById,
   sortPostsByDate,
   updatePostById,
@@ -69,6 +71,19 @@ app.patch('/posts/:id', (req, res) => {
   }
   posts = posts.map((post) => (post.id === postId ? updatedPost : post));
   return res.json(updatedPost);
+});
+
+// DELETE a specific post by providing the post id.
+app.delete('/posts/:id', (req, res) => {
+  const postId = parseInt(req.params.id, 10);
+  const isIdValid = checkIdValidity(posts, postId);
+  if (!isIdValid) {
+    return res.status(404).json({
+      message: `No existing post with id ${postId}. No post was deleted.`,
+    });
+  }
+  posts = deletePostById(posts, postId);
+  return res.sendStatus(200);
 });
 
 // App server

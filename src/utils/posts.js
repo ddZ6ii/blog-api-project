@@ -124,3 +124,12 @@ export const updatePostById = (posts, postId, { title, author, content }) => {
     date: toISOString(),
   };
 };
+
+/**
+ * Delete selected post from provided postId.
+ * Returns a (deep) filtered copy of the initial posts.
+ * @param {post[]} posts
+ * @param {number} postId
+ * @returns {post[]}
+ */
+export const deletePostById = (posts, postId) => posts.filter((post) => ({ ...post }).id !== postId);

@@ -3,10 +3,14 @@ import { createPost } from '../utils/posts';
 
 describe('createPost', () => {
   it('should throw an error if nextPostId is missing', () => {
-    expect(() => createPost(null, { title: '', author: '', content: '' })).toThrowError('required');
+    expect(() =>
+      createPost(null, { title: '', author: '', content: '' }),
+    ).toThrowError('required');
   });
   it('should throw an error if nextPostId is not of type number', () => {
-    expect(() => createPost('4', { title: '', author: '', content: '' })).toThrowError('number');
+    expect(() =>
+      createPost('4', { title: '', author: '', content: '' }),
+    ).toThrowError('number');
   });
 
   it('should return an object', () => {
