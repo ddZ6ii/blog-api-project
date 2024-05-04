@@ -3,6 +3,26 @@ import isEmpty from './checkIsEmpty.js';
 import shallowEqual from './shallowEqual.js';
 
 /**
+ * Filter blog posts (`title`, `content`, `author`) matching the specified `filterText`.
+ * @param {post[]} posts
+ * @param {string} filterText
+ * @returns {post[] | []}
+ */
+export const filterPosts = (posts, filterText = '') => {
+  if (posts == null) throw new Error('Array of posts required');
+  if (!Array.isArray(posts)) throw new Error('Expected posts of type array');
+
+  const pattern = new RegExp(filterText.trim(), 'i');
+  // Use reduce (instead of filter) to ensure function's purity by also returning copies of the post objects.
+  return posts.reduce((acc, post) => {
+    const match = [post.title, post.content, post.author].some((el) =>
+      pattern.test(el),
+    );
+    return match ? [...acc, { ...post }] : acc;
+  }, []);
+};
+
+/**
  * Sort posts order by date.
  * @param {string} order
  * @param {post[]} posts
@@ -34,13 +54,17 @@ export const sortPostsByDate = (...args) => {
 };
 
 /**
- * Check whether `sort` request parameter is valid: must be equal to either 'ASC' of 'DESC'.
+ * Return posts sorting order.
+ * To be considered as valid. `sortParam` must be equal to either 'ASC' or 'DESC'.
  * @param {string} sortParam
- * @returns {boolean}
+ * @returns {string}
  */
-export const checkSortParamValidity = (sortParam) =>
-  sortParam &&
-  (sortParam.toLowerCase() === 'asc' || sortParam.toLowerCase() === 'desc');
+export const getSortingOrder = (sortParam) => {
+  const isValid =
+    sortParam &&
+    (sortParam.toLowerCase() === 'asc' || sortParam.toLowerCase() === 'desc');
+  return isValid ? sortParam : 'desc';
+};
 
 /**
  * Check whether `posts` contains the specified `postId`.

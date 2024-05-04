@@ -9,10 +9,11 @@ import initialPosts from './data/posts.js';
 
 import {
   checkIdValidity,
-  checkSortParamValidity,
   createPost,
   deletePostById,
+  filterPosts,
   getPostById,
+  getSortingOrder,
   sortPostsByDate,
   updatePostById,
 } from './utils/posts.js';
@@ -33,9 +34,9 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 // GET All posts
 app.get('/posts', (req, res) => {
-  const { sort } = req.query;
-  const sortingOrder = checkSortParamValidity(sort) ? sort : 'DESC';
-  const sortedPost = sortPostsByDate(sortingOrder, posts);
+  const { sort, filter: filterText } = req.query;
+  const filteredPosts = filterPosts(posts, filterText);
+  const sortedPost = sortPostsByDate(getSortingOrder(sort), filteredPosts);
   return res.json(sortedPost);
 });
 

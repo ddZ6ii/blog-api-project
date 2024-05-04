@@ -32,15 +32,6 @@ body {
   line-height: 1.6;
 }
 
-.container {
-  margin: 50px auto;
-  padding: 20px 40px;
-  width: min(90%, 800px);
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
 h1 {
   margin-bottom: 20px;
   color: #444;
@@ -152,8 +143,55 @@ a.outline:is(:hover, :focus-visible) {
   color: #ffffff;
 }
 
-#newPostBtn {
+.container {
+  margin: 50px auto;
+  padding: 20px 40px;
+  width: min(90%, 800px);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-actions {
   margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 40px;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.searchForm-field {
+  position: relative;
+  overflow: hidden;
+}
+
+.searchForm-btn {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  translate: 50% -50%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#searchForm {
+  padding: 10px 0;
+  max-width: 400px;
+  flex-grow: 1;
+}
+
+#search {
+  margin: 0;
+  padding-right: 40px;
+  line-height: 1.6;
+}
+
+#newPostBtn {
   padding: 10px 15px;
   background-color: #2ecc71;
   border: none;
