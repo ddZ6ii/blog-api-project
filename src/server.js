@@ -36,6 +36,25 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Route to render the edit page
+app.get('/new', (req, res) => {
+  res.render('modify', { heading: 'New Post', submit: 'Create Post' });
+});
+
+// Route to render the edit page pre-filled with data from selected post
+app.get('/edit/:id', async (req, res) => {
+  try {
+    const response = await axios.get(`${API_URL}/posts/${req.params.id}`);
+    res.render('modify', {
+      heading: 'Edit Post',
+      submit: 'Update Post',
+      post: response.data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching post' });
+  }
+});
+
 // App server
 app.listen(port, () => {
   console.info(
