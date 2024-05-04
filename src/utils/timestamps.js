@@ -3,6 +3,11 @@
  * @param {date} isoStringDate
  * @returns {number}
  */
-const toTimeStamp = (isoStringDate) => Date.parse(isoStringDate);
+export const toTimeStamp = (isoStringDate) => Date.parse(isoStringDate);
 
-export default toTimeStamp;
+/**
+ * Create a string representing the current date in ISO format YYYY-MM-DDTHH:mm:ss.sssZ.
+ * The timezone is always UTC, as denoted by the suffix Z.
+ * @returns {string}
+ */
+export const toISOString = () => new Date().toISOString();

@@ -9,6 +9,7 @@ import initialPosts from './data/posts.js';
 
 import {
   checkSortParamValidity,
+  createPost,
   getPostById,
   sortPostsByDate,
 } from './utils/posts.js';
@@ -20,6 +21,7 @@ const port = parseInt(API_SERVER_PORT, 10) ?? 8000;
 
 // In-memory data store
 const posts = initialPosts;
+let nextPostId = 4;
 
 // Application-level middlewares
 app.use(express.json());
@@ -44,6 +46,15 @@ app.get('/posts/:id', (req, res) => {
       .json({ message: `No existing post with id ${postId}...` });
   }
   return res.json(post);
+});
+
+// POST a new post
+app.post('/posts', (req, res) => {
+  if (isEmpty(req.body)) return res.sendStatus(400);
+  const newPost = createPost(nextPostId, req.body);
+  posts.push(newPost);
+  nextPostId += 1;
+  return res.json(newPost);
 });
 
 // App server

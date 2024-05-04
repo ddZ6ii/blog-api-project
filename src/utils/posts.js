@@ -1,4 +1,4 @@
-import toTimeStamp from './timestamps.js';
+import { toTimeStamp, toISOString } from './timestamps.js';
 import isEmpty from './checkIsEmpty.js';
 
 /**
@@ -53,4 +53,26 @@ export const getPostById = (posts, postId) => {
   const validPostId = checkIdValidity(posts, postId);
   if (!validPostId) return {};
   return posts.find((post) => post.id === postId);
+};
+
+/**
+ * Create a new post from provided input parameters and add the id automatically.
+ * @param {number} nextPostId
+ * @param {{ title, author, content }} param1
+ * @returns {post}
+ */
+export const createPost = (
+  nextPostId,
+  { title = 'New Post', author = 'John Doe', content = '' },
+) => {
+  if (!nextPostId) throw new Error('nextPostId is required');
+  if (typeof nextPostId !== 'number') throw new Error('nextPostId must be of type number');
+  if (title == null && author == null && content == null) throw new Error('post info are missing');
+  return {
+    id: nextPostId,
+    title: title.trim(),
+    author: author.trim(),
+    content: content.trim(),
+    date: toISOString(),
+  };
 };
