@@ -1,0 +1,138 @@
+{
+  "info": {
+    "_postman_id": "171e2568-d0ad-4ef1-bd06-eda07c13ed7d",
+    "name": "Blog Posts API",
+    "description": "Welcome to the Blog Posts API. This private API allows you to manage blog posts.\n\nPlease refer to the documentation below for details on how to interact with the API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26773174"
+  },
+  "item": [
+    {
+      "name": "/posts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/posts?sort=desc",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["posts"],
+          "query": [
+            {
+              "key": "sort",
+              "value": "desc"
+            }
+          ]
+        },
+        "description": "Returns all blog posts sorted by publication time (descending order by default).\n\n**Query Parameter (optional):**\n\n- `sort`: The sorting method (`desc` or `asc`).\n    \n\n**Example Response:**\n\n``` json\n[\n    {\n        \"id\": 3,\n        \"title\": \"Sustainable Living: Tips for an Eco-Friendly Lifestyle\",\n        \"content\": \"Sustainability is more than just a buzzword; it's a way of life. As the effects of climate change become more pronounced, there's a growing realization about the need to live sustainably. From reducing waste and conserving energy to supporting eco-friendly products, there are numerous ways we can make our daily lives more environmentally friendly. This post will explore practical tips and habits that can make a significant difference.\",\n        \"author\": \"Samuel Green\",\n        \"date\": \"2023-08-10T09:15:00Z\"\n    },\n    {\n        \"id\": 2,\n        \"title\": \"The Impact of Artificial Intelligence on Modern Businesses\",\n        \"content\": \"Artificial Intelligence (AI) is no longer a concept of the future. It's very much a part of our present, reshaping industries and enhancing the capabilities of existing systems. From automating routine tasks to offering intelligent insights, AI is proving to be a boon for businesses. With advancements in machine learning and deep learning, businesses can now address previously insurmountable problems and tap into new opportunities.\",\n        \"author\": \"Mia Williams\",\n        \"date\": \"2023-08-05T14:30:00Z\"\n    },\n    {\n        \"id\": 1,\n        \"title\": \"The Rise of Decentralized Finance\",\n        \"content\": \"Decentralized Finance (DeFi) is an emerging and rapidly evolving field in the blockchain industry. It refers to the shift from traditional, centralized financial systems to peer-to-peer finance enabled by decentralized technologies built on Ethereum and other blockchains. With the promise of reduced dependency on the traditional banking sector, DeFi platforms offer a wide range of services, from lending and borrowing to insurance and trading.\",\n        \"author\": \"Alex Thompson\",\n        \"date\": \"2023-08-01T10:00:00Z\"\n    }\n]\n\n ```"
+      },
+      "response": []
+    },
+    {
+      "name": "/posts/{id}",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/posts/2",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["posts", "2"]
+        },
+        "description": "Returns the blog post with the specified ID.\n\n**Path Parameter:**\n\n- `id`: The ID of the post to return.\n    \n\n**Example Request:**\n\n```\nhttp://localhost:4000/posts/2\n\n ```\n\n**Example Response:**\n\n``` json\n{\n    \"id\": 2,\n    \"title\": \"The Impact of Artificial Intelligence on Modern Businesses\",\n    \"content\": \"Artificial Intelligence (AI) is no longer a concept of the future. It's very much a part of our present, reshaping industries and enhancing the capabilities of existing systems. From automating routine tasks to offering intelligent insights, AI is proving to be a boon for businesses. With advancements in machine learning and deep learning, businesses can now address previously insurmountable problems and tap into new opportunities.\",\n    \"author\": \"Mia Williams\",\n    \"date\": \"2023-08-05T14:30:00Z\"\n}\n\n ```"
+      },
+      "response": []
+    },
+    {
+      "name": "/posts",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "title",
+              "value": "New Post Title",
+              "type": "text"
+            },
+            {
+              "key": "content",
+              "value": "New Post Content",
+              "type": "text"
+            },
+            {
+              "key": "author",
+              "value": "New Post Author",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:4000/posts",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["posts"]
+        },
+        "description": "Adds a new post (with automatically generated ID).\n\n**Request Body:**\n\n``` json\n{\n    \"title\": \"New Post Title\",\n    \"author\": \"New Post Author\",\n    \"content\": \"New Post Content\",\n}\n\n ```\n\n**Example Request:**\n\n```\nhttp://localhost:4000/posts\n\n ```\n\n**Example Response:**\n\n``` json\n{\n    \"id\": 4,\n    \"title\": \"New Post Title\",\n    \"author\": \"New Post Author\",\n    \"content\": \"New Post Content\",\n    \"date\": \"2024-05-04T10:57:07.971Z\"\n}\n\n ```"
+      },
+      "response": []
+    },
+    {
+      "name": "/posts/{id}",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "title",
+              "value": "Updated Post Title",
+              "type": "text"
+            },
+            {
+              "key": "content",
+              "value": "Updated Post Content",
+              "type": "text"
+            },
+            {
+              "key": "author",
+              "value": "New Post Author",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:4000/posts/4",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["posts", "4"]
+        },
+        "description": "Partially updates the content of the post with the specified ID.\n\n**Path Parameter:**\n\n- `id`: The ID of the post to update.\n    \n\n**Request Body:**\n\n``` json\n{\n    \"title\": \"Updated Post Title\",\n    \"author\": \"Updated Post Author\",\n}\n\n ```\n\n**Example Request:**\n\n```\nhttp://localhost:4000/posts/4\n\n ```\n\n**Example Response:**\n\n``` json\n{\n    \"id\": 4,\n    \"title\": \"Updated Post Title\",\n    \"author\": \"Updated Post Author\",\n    \"content\": \"Updated Post Content\",\n    \"date\": \"2024-05-04T11:05:22.077Z\"\n}\n\n ```"
+      },
+      "response": []
+    },
+    {
+      "name": "/posts/{id}",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:4000/posts/4",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "4000",
+          "path": ["posts", "4"]
+        },
+        "description": "Deletes the post with the specified ID.\n\n**Path Parameter:**\n\n- `id`: The ID of the post to delete.\n    \n\n**Example Request:**\n\n```\nhttp://localhost:4000/posts/4\n\n ```\n\n**Example Response:**\n\n``` json\nOK\n\n ```"
+      },
+      "response": []
+    }
+  ]
+}
