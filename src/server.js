@@ -36,14 +36,14 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Route to render the edit page with filtered posts
+// Route to render the main page with filtered posts
 app.post('/', async (req, res) => {
   try {
     const { search: filterText } = req.body;
     const response = await axios.get(`${API_URL}/posts?filter=${filterText}`);
     res.render('index', { posts: response.data, filter: filterText });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching posts' });
+    res.status(500).json({ message: 'Error searching posts' });
   }
 });
 
