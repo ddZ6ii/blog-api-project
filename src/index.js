@@ -123,10 +123,10 @@ app.delete('/posts/:id', async (req, res) => {
     return res.sendStatus(200);
   } catch (err) {
     console.error('Failed to delete post!', err);
-    return res.status(500).json({
+    return res.status(400).json({
       status: 'error',
-      message: `Failed to delete post: ${err}`,
-      code: 500,
+      message: `Invalid request parameter: ${err}`,
+      code: 400,
     });
   }
 });
@@ -144,6 +144,15 @@ app.post('/posts/reset', async (req, res) => {
       code: 500,
     });
   }
+});
+
+// Undefined routes
+app.get('*', (req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: `Invalid route`,
+    code: 404,
+  });
 });
 
 // App server

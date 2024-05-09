@@ -25,6 +25,11 @@ a {
   font-family: 'Arial', sans-serif;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
+
 body {
   min-height: 100dvh;
   background-color: #f7f9fc;
@@ -152,6 +157,13 @@ a.outline:is(:hover, :focus-visible) {
   color: #ffffff;
 }
 
+a.link-404 {
+  margin-right: 0px;
+  margin-top: 20px;
+  width: fit-content;
+  display: block;
+}
+
 .container {
   margin: 50px auto;
   padding: 20px 40px;
@@ -186,6 +198,23 @@ a.outline:is(:hover, :focus-visible) {
   height: 100%;
   display: flex;
   align-items: center;
+}
+
+.wrapper-404 {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  & .container {
+    margin: 0 auto;
+  }
+}
+
+.content-404 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  align-items: center;
+  justify-items: end;
+  gap: 20px;
 }
 
 #searchForm {

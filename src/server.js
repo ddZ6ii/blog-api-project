@@ -106,6 +106,11 @@ app.get('/api/posts/reset', async (req, res) => {
   }
 });
 
+// Undefined URL
+app.get('*', (req, res) => {
+  res.render('notFound');
+});
+
 // App server
 app.listen(port, () => {
   console.info(
