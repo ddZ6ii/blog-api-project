@@ -6,35 +6,18 @@ import express from 'express';
 import 'dotenv/config';
 import chalk from 'chalk';
 
-import {
-  createPost,
-  deletePostById,
-  filterPosts,
-  getPostById,
-  initPosts,
-  sortPostsByDate,
-  updatePostById,
-} from './utils/posts.js';
-import { writeToJSON } from './utils/file.js';
-import isEmpty from './utils/checkIsEmpty.js';
+import isEmpty from './utils/isEmpty.js';
+import { blog } from './store/blog.js';
 
 const { API_SERVER_PORT } = process.env;
 const app = express();
 const port = parseInt(API_SERVER_PORT, 10) ?? 8000;
 
-// In-memory data store.
-let posts;
-let nextPostId;
-// let nextPostId = 4;
-
-// Initialize posts from JSON file.
+// Initialize in-memory data store from JSON file (if any content).
 try {
-  const { initialPosts, nextId } = await initPosts();
-  // Updata in-memory data store.
-  posts = initialPosts;
-  nextPostId = nextId;
+  await blog.initPosts();
 } catch (err) {
-  console.error('Ooops... failed to initialize posts:', err.message, err.stack);
+  console.error('Failed to retrieve posts from file!', err);
 }
 
 // Application-level middlewares.
@@ -46,21 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/posts', (req, res) => {
   try {
     const { sort, filter: filterText } = req.query;
-    const filteredPosts = filterPosts(posts, filterText);
-    const sortedPost = sortPostsByDate(filteredPosts, sort);
-    // if (isEmpty(sortedPost)) {
-    //   return res.status(404).json({
-    //     status: 'success',
-    //     message: 'No posts found matching your search criteria',
-    //     code: 404,
-    //   });
-    // }
+    const filteredPosts = blog.filterPosts(filterText);
+    const sortedPost = blog.sortPostsByDate(filteredPosts, sort);
     return res.json(sortedPost);
   } catch (err) {
-    console.error('Failed to retrieve posts!', err.message, err.stack);
+    console.error('Failed to retrieve posts!', err);
     return res.status(400).json({
       status: 'error',
-      message: 'Invalid search parameters',
+      message: `Invalid search parameters: ${err}`,
       code: 400,
     });
   }
@@ -70,7 +46,7 @@ app.get('/posts', (req, res) => {
 app.get('/posts/:id', (req, res) => {
   try {
     const postId = parseInt(req.params.id, 10);
-    const post = getPostById(posts, postId);
+    const post = blog.getPostById(postId);
     if (isEmpty(post)) {
       return res.status(404).json({
         status: 'error',
@@ -80,10 +56,10 @@ app.get('/posts/:id', (req, res) => {
     }
     return res.json(post);
   } catch (err) {
-    console.error('Failed to retrieve post by id!', err.message, err.stack);
+    console.error('Failed to retrieve post by id!', err);
     return res.status(400).json({
       status: 'error',
-      message: 'Invalid request parameter',
+      message: `Invalid request parameter: ${err}`,
       code: 400,
     });
   }
@@ -97,19 +73,13 @@ app.post('/posts', async (req, res) => {
         .status(400)
         .json({ status: 'error', message: 'No post data provided', code: 400 });
     }
-
-    const newPost = createPost(nextPostId, req.body);
-    // Update in-memory data store.
-    posts.push(newPost);
-    nextPostId += 1;
-    // Persist data to JSON file.
-    await writeToJSON(posts);
+    const newPost = await blog.addPosts(req.body);
     return res.json(newPost);
   } catch (err) {
-    console.error('Failed to create post!', err.message, err.stack);
+    console.error('Failed to create post!', err);
     return res.status(500).json({
       status: 'error',
-      message: 'Failed to create post',
+      message: `Failed to create post: ${err}`,
       code: 500,
     });
   }
@@ -119,29 +89,21 @@ app.post('/posts', async (req, res) => {
 app.patch('/posts/:id', async (req, res) => {
   try {
     const postId = parseInt(req.params.id, 10);
-    const result = updatePostById(posts, postId, req.body);
-    if (isEmpty(result)) {
+    const updatedPost = await blog.updatePostById(req.body, postId);
+    if (isEmpty(updatedPost)) {
       return res.status(404).json({
         status: 'error',
         message: `No existing post with id: ${postId}`,
         code: 404,
       });
     }
-    if (result.hasUpdatedContent) {
-      // Update in-memory data store.
-      posts = posts.map((post) =>
-        post.id === postId ? result.updatedPost : post,
-      );
-      // Persist data to JSON file.
-      await writeToJSON(posts);
-    }
-    return res.json(result.updatedPost);
+    return res.json(updatedPost);
   } catch (err) {
-    console.error('Failed to update post!', err.message, err.stack);
-    return res.status(500).json({
+    console.error('Failed to update post!', err);
+    return res.status(400).json({
       status: 'error',
-      message: 'Failed to update post',
-      code: 500,
+      message: `Invalid request: ${err}`,
+      code: 400,
     });
   }
 });
@@ -150,25 +112,20 @@ app.patch('/posts/:id', async (req, res) => {
 app.delete('/posts/:id', async (req, res) => {
   try {
     const postId = parseInt(req.params.id, 10);
-
-    const updatedPosts = deletePostById(posts, postId);
-    if (isEmpty(updatedPosts)) {
+    const deletedPostId = await blog.deletePostById(postId);
+    if (isEmpty(deletedPostId)) {
       return res.status(404).json({
         status: 'error',
         message: `No existing post with id: ${postId}`,
         code: 404,
       });
     }
-    // Update in-memory data store.
-    posts = updatedPosts;
-    // Persist data to JSON file.
-    await writeToJSON(posts);
     return res.sendStatus(200);
   } catch (err) {
-    console.error('Failed to delete post!', err.message, err.stack);
+    console.error('Failed to delete post!', err);
     return res.status(500).json({
       status: 'error',
-      message: 'Failed to delete post',
+      message: `Failed to delete post: ${err}`,
       code: 500,
     });
   }

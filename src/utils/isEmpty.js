@@ -1,6 +1,6 @@
 /**
  * Check wheter the input argument is empty (null, undefined, '', [], {}).
- * @param {*} obj
+ * @param {unknown} obj
  * @returns {boolean}
  */
 const isEmpty = (obj) => {

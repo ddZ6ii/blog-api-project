@@ -1,7 +1,7 @@
 /**
  * Determine whether 2 objects are equals via a shallow comparison.
- * @param {object} obj1
- * @param {object} obj2
+ * @param {unknown} obj1
+ * @param {unknown} obj2
  * @returns {boolean}
  */
 const shallowEqual = (obj1, obj2) => {
