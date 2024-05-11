@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { isValidPostId } from '../utils/posts';
+import isValidPostId from '@utils/isValidPostId.js';
 
-describe('isValidPostId', () => {
-  it('should return false if missing postId', () => {
+describe('blog.isValidPostId', () => {
+  it('should throw an error if missing postId', () => {
     expect(() => isValidPostId()).toThrowError('required');
   });
 
