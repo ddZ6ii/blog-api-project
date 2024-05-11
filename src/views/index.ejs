@@ -54,7 +54,10 @@
       <% if (locals.filter) { %>
       <p>No results match your search criteria...</p>
       <% } else { %>
-      <p>No currently available posts...</p>
+      <div>
+        <p>No currently available posts...</p>
+        <a href="/api/posts/reset" class="neutral-dark">Generate new posts</a>
+      </div>
       <% }%>
 
       <% }%>

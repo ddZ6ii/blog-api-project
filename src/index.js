@@ -13,7 +13,7 @@ const { API_SERVER_PORT } = process.env;
 const app = express();
 const port = parseInt(API_SERVER_PORT, 10) ?? 8000;
 
-// Initialize in-memory data store from JSON file (if any content).
+// Initialize in-memory data store from JSON file.
 try {
   await blog.initPosts();
 } catch (err) {
@@ -126,6 +126,21 @@ app.delete('/posts/:id', async (req, res) => {
     return res.status(500).json({
       status: 'error',
       message: `Failed to delete post: ${err}`,
+      code: 500,
+    });
+  }
+});
+
+// GET Reset all posts
+app.post('/posts/reset', async (req, res) => {
+  try {
+    await blog.resetPosts();
+    return res.sendStatus(205);
+  } catch (err) {
+    console.error('Failed to reset posts!', err);
+    return res.status(500).json({
+      status: 'error',
+      message: `Failed to reset posts: ${err}`,
       code: 500,
     });
   }

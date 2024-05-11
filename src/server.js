@@ -96,6 +96,16 @@ app.get('/api/posts/delete/:id', async (req, res) => {
   }
 });
 
+// Route to reset all post
+app.get('/api/posts/reset', async (req, res) => {
+  try {
+    const response = await axios.post(`${API_URL}/posts/reset`);
+    res.redirect('/');
+  } catch (err) {
+    res.status(500).json({ message: 'Error reseting posts' });
+  }
+});
+
 // App server
 app.listen(port, () => {
   console.info(
