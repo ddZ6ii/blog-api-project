@@ -1,9 +1,6 @@
 import express from 'express';
-import axios from 'axios';
 import * as appController from '../controllers/appController.js';
 
-const { API_SERVER_PORT } = process.env;
-const API_URL = `http://localhost:${parseInt(API_SERVER_PORT, 10) ?? 8000}`;
 const appRouter = express.Router();
 
 // Render main page.

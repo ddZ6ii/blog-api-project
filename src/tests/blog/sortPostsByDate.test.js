@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blog } from '@store/blog.js';
+import { blog } from '../../store/blog.js';
 
 describe('Sort posts by date', () => {
   it('should throw an error if sort is null', () => {

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { blog } from '@store/blog.js';
-import { readFromJSON } from '@utils/fileIO.js';
+import { blog } from '../../store/blog.js';
+import { readFromJSON } from '../../utils/fileIO.js';
 
 const newPost = {
   title: "Amazing Things You Wouldn't Have Guessed About...",

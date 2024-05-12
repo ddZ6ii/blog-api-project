@@ -14,7 +14,7 @@ import {
 } from 'vitest';
 import axios from 'axios';
 import 'dotenv/config';
-import { blog } from '@store/blog';
+import { blog } from '../../store/blog.js';
 
 const TIMEOUT = 30000; // 30 sec
 const { API_SERVER_PORT, LOCALHOST_IP_ADRESS } = process.env;
@@ -61,7 +61,7 @@ describe.concurrent('API routes', () => {
       beforeAll(async () => {
         try {
           await blog.resetPosts();
-          response = await axios.get(`${API_BASE_URL  }/posts`);
+          response = await axios.get(`${API_BASE_URL}/posts`);
         } catch (err) {
           console.error('Failed to fetch posts!', err);
         }
@@ -100,7 +100,7 @@ describe.concurrent('API routes', () => {
       beforeAll(async () => {
         try {
           await blog.resetPosts();
-          response = await axios.get(`${API_BASE_URL  }/posts?sort=ASC`);
+          response = await axios.get(`${API_BASE_URL}/posts?sort=ASC`);
         } catch (err) {
           console.error('Failed to fetch posts sorted in ASC order!', err);
         }
@@ -139,7 +139,7 @@ describe.concurrent('API routes', () => {
       beforeAll(async () => {
         try {
           await blog.resetPosts();
-          response = await axios.get(`${API_BASE_URL  }/posts?filter=thompson`);
+          response = await axios.get(`${API_BASE_URL}/posts?filter=thompson`);
         } catch (err) {
           console.error('Failed to search matching posts!', err);
         }
@@ -226,9 +226,8 @@ describe.concurrent('API routes', () => {
       it.sequential(
         'response data should contain the expected error message',
         async () => {
-          const pattern = new RegExp('invalid request parameter', 'i');
           expect(response.data).toMatchObject({
-            message: expect.stringMatching(pattern),
+            message: expect.stringMatching(/invalid request parameter/i),
           });
         },
       );
@@ -266,9 +265,8 @@ describe.concurrent('API routes', () => {
       it.sequential(
         'response data should contain the expected error message',
         async () => {
-          const pattern = new RegExp('no existing post with id', 'i');
           expect(response.data).toMatchObject({
-            message: expect.stringMatching(pattern),
+            message: expect.stringMatching(/no existing post with id/i),
           });
         },
       );
@@ -334,7 +332,7 @@ describe.concurrent('API routes', () => {
 
       beforeAll(async () => {
         try {
-          response = await axios.post(`${API_BASE_URL  }/posts`, body, options);
+          response = await axios.post(`${API_BASE_URL}/posts`, body, options);
         } catch (err) {
           console.error('Failed to create post!', err);
         }
@@ -357,9 +355,8 @@ describe.concurrent('API routes', () => {
       it.sequential(
         'response data should contain the expected error message',
         async () => {
-          const pattern = new RegExp('no post data', 'i');
           expect(response.data).toMatchObject({
-            message: expect.stringMatching(pattern),
+            message: expect.stringMatching(/no post data/i),
           });
         },
       );
@@ -375,7 +372,7 @@ describe.concurrent('API routes', () => {
       };
       beforeAll(async () => {
         try {
-          response = await axios.post(`${API_BASE_URL  }/posts`, newPost);
+          response = await axios.post(`${API_BASE_URL}/posts`, newPost);
         } catch (err) {
           console.error('Failed to create post!', err);
         }
@@ -471,9 +468,8 @@ describe.concurrent('API routes', () => {
         it.sequential(
           'response data should contain the expected error message',
           async () => {
-            const pattern = new RegExp('invalid request', 'i');
             expect(response.data).toMatchObject({
-              message: expect.stringMatching(pattern),
+              message: expect.stringMatching(/invalid request/i),
             });
           },
         );
@@ -517,9 +513,8 @@ describe.concurrent('API routes', () => {
         it.sequential(
           'response data should contain the expected error message',
           async () => {
-            const pattern = new RegExp('no existing post', 'i');
             expect(response.data).toMatchObject({
-              message: expect.stringMatching(pattern),
+              message: expect.stringMatching(/no existing post/i),
             });
           },
         );
@@ -561,9 +556,8 @@ describe.concurrent('API routes', () => {
           it.sequential(
             'response data should contain the expected error message',
             async () => {
-              const pattern = new RegExp('invalid request', 'i');
               expect(response.data).toMatchObject({
-                message: expect.stringMatching(pattern),
+                message: expect.stringMatching(/invalid request/i),
               });
             },
           );
@@ -666,9 +660,8 @@ describe.concurrent('API routes', () => {
       it.sequential(
         'response data should contain the expected error message',
         async () => {
-          const pattern = new RegExp('invalid request parameter', 'i');
           expect(response.data).toMatchObject({
-            message: expect.stringMatching(pattern),
+            message: expect.stringMatching(/invalid request parameter/i),
           });
         },
       );
@@ -707,9 +700,8 @@ describe.concurrent('API routes', () => {
       it.sequential(
         'response data should contain the expected error message',
         async () => {
-          const pattern = new RegExp('no existing post with id', 'i');
           expect(response.data).toMatchObject({
-            message: expect.stringMatching(pattern),
+            message: expect.stringMatching(/no existing post with id/i),
           });
         },
       );
@@ -727,7 +719,7 @@ describe.concurrent('API routes', () => {
 
       beforeAll(async () => {
         try {
-          await axios.post(`${API_BASE_URL  }/posts`, newPost);
+          await axios.post(`${API_BASE_URL}/posts`, newPost);
           response = await axios.delete(`${API_BASE_URL}/posts/${postId}`);
         } catch (err) {
           console.error(`Failed to delete post with ID ${postId}!`, err);
@@ -747,8 +739,7 @@ describe.concurrent('API routes', () => {
       });
 
       it.sequential('should return expect success message', async () => {
-        const pattern = new RegExp('ok', 'i');
-        expect(response.data).match(pattern);
+        expect(response.data).match(/ok/i);
       });
     });
   });
@@ -758,7 +749,7 @@ describe.concurrent('API routes', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.post(`${API_BASE_URL  }/posts/reset`);
+        response = await axios.post(`${API_BASE_URL}/posts/reset`);
       } catch (err) {
         console.error('Failed request to reset posts!', err);
       }
@@ -784,7 +775,7 @@ describe.concurrent('API routes', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.get(`${API_BASE_URL  }/invalid`, options);
+        response = await axios.get(`${API_BASE_URL}/invalid`, options);
       } catch (err) {
         console.error('Failed request to invalid endpoint!', err);
       }
@@ -807,9 +798,8 @@ describe.concurrent('API routes', () => {
     it.sequential(
       'response data should contain the expected error message',
       async () => {
-        const pattern = new RegExp('invalid route', 'i');
         expect(response.data).toMatchObject({
-          message: expect.stringMatching(pattern),
+          message: expect.stringMatching(/invalid route/i),
         });
       },
     );

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import shallowEqual from '@utils/shallowEqual';
+import shallowEqual from '../../utils/shallowEqual';
 
 describe('shallowEqual', () => {
   it('should throw an error if missing an input argument', () => {

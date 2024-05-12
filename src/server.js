@@ -1,7 +1,6 @@
 /// "Third-party" backend application that makes API requests.
 
 import express from 'express';
-import axios from 'axios';
 import chalk from 'chalk';
 import 'dotenv/config';
 import { dirname, join } from 'path';

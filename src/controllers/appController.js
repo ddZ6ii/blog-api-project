@@ -74,7 +74,7 @@ export const deletePostById = async (req, res) => {
 
 export const resetPosts = async (req, res) => {
   try {
-    const response = await axios.post(`${API_URL}/posts/reset`);
+    await axios.post(`${API_URL}/posts/reset`);
     res.redirect('/');
   } catch (error) {
     console.error(`Failed to reset posts:`, error);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import isEmpty from '@utils/isEmpty.js';
+import isEmpty from '../../utils/isEmpty.js';
 
 describe('isEmpty', () => {
   it('should return true for null input', () => {

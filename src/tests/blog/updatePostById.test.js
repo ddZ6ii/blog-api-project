@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { blog } from '@store/blog.js';
+import { blog } from '../../store/blog.js';
 
 const updatedPostContent = {
   title: 'New Title',

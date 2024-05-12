@@ -62,6 +62,7 @@ export default [
       'node_modules',
       'eslint.config.js',
       'postcss.config.js',
+      'vitest.config.js',
       'vite.config.js',
     ],
   },

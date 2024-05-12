@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blog } from '@store/blog.js';
+import { blog } from '../../store/blog.js';
 
 describe('Retrive post by ID', () => {
   it('should throw an error if missing ID', () => {

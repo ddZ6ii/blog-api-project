@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { blog } from '@store/blog.js';
+import { blog } from '../../store/blog.js';
 
 describe('Filter posts', () => {
   it('should return all posts if missing filterText', () => {
