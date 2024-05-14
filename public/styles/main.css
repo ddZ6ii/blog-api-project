@@ -183,21 +183,31 @@ a.link-404 {
   justify-content: space-between;
 }
 
-.searchForm-field {
+.searchForm {
   position: relative;
   overflow: hidden;
+  max-width: 400px;
+  flex-grow: 1;
 }
 
-.searchForm-btn {
+.searchForm-icon {
   position: absolute;
   top: 50%;
   right: 20px;
   translate: 50% -50%;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+
+  padding: 10px;
   height: 100%;
+
   display: flex;
   align-items: center;
+
+  background-color: #007bff;
+  border-radius: 4px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+
+  font-size: 1em;
 }
 
 .wrapper-404 {
@@ -217,15 +227,9 @@ a.link-404 {
   gap: 20px;
 }
 
-#searchForm {
-  padding: 10px 0;
-  max-width: 400px;
-  flex-grow: 1;
-}
-
 #search {
   margin: 0;
-  padding-right: 40px;
+  padding-right: 50px;
   line-height: 1.6;
 }
 
