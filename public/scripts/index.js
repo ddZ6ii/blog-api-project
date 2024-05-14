@@ -1,6 +1,8 @@
-const postsEl = document.querySelector('#postsList');
-const formEl = document.querySelector('#searchForm');
-const inputEl = document.querySelector('#search');
+const containerEl = document.querySelector('.container');
+const searchFormEl = document.querySelector('#searchForm');
+const searchInputEl = document.querySelector('#search');
+const dialogEl = document.querySelector('dialog');
+
 /**
  * Debounced version of onLinkClick function.
  * Prevents server error caused by clicking multiple times the Delete button from the UI.
@@ -15,32 +17,34 @@ const debouncedOnLinkClick = debounceLead(onLinkClick);
  */
 const debouncedOnInputChange = debounce(onInputChange);
 
-// Reset focus and input value on search input.
+// Handle the case where all blog posts have been deleted.
 window.addEventListener('load', (event) => {
-  inputEl.focus();
-  if (inputEl.value) {
-    const previousValue = inputEl.value;
-    inputEl.value = '';
-    inputEl.value = previousValue;
+  if (searchInputEl) {
+    searchInputEl.focus();
+    // Reset focus position at the end of search text on page reload.
+    if (searchInputEl.value) {
+      const previousValue = searchInputEl.value;
+      searchInputEl.value = '';
+      searchInputEl.value = previousValue;
+    }
+    searchInputEl.addEventListener('keyup', debouncedOnInputChange);
   }
 });
 
-inputEl.addEventListener('keyup', debouncedOnInputChange);
-
-if (postsEl) {
-  postsEl.addEventListener('click', (e) => {
-    const isDeleteLink = e.target.classList.contains('delete');
-    if (!isDeleteLink) return;
+containerEl.addEventListener('click', (e) => {
+  if (e.target.nodeName.toLowerCase() === 'a') {
     e.preventDefault();
     debouncedOnLinkClick(e);
-  });
-}
+  }
+});
 
 function onLinkClick(event) {
+  dialogEl.setAttribute('open', '');
   location.href = event.target.href;
 }
 function onInputChange() {
-  formEl.requestSubmit();
+  dialogEl.setAttribute('open', '');
+  searchFormEl.requestSubmit();
 }
 /**
  * Debounce user action by specified delay.
