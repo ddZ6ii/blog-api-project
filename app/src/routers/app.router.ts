@@ -1,5 +1,5 @@
 import express from 'express';
-import * as appController from '@controllers/appController.js';
+import * as appController from '@controllers/appController.ts';
 
 const appRouter = express.Router();
 
@@ -7,7 +7,7 @@ const appRouter = express.Router();
 appRouter.get('/', appController.renderAllPosts);
 
 // Render main page with filtered posts.
-appRouter.post('/', appController.renderFilteredPosts);
+appRouter.post('/', appController.renderFilteredPost);
 
 // Render add/edit page.
 appRouter.get('/new', appController.renderEditPost);
@@ -27,7 +27,7 @@ appRouter.get('/api/posts/delete/:id', appController.deletePostById);
 // Reset all blog posts from UI button (only visible when all posts are deleted).
 appRouter.get('/api/posts/reset', appController.resetPosts);
 
-// Handle invalid URLs.
-appRouter.get('*', appController.renderNotFound);
+// Handle invalid URLs for all HTTP methods.
+appRouter.all('*', appController.renderNotFound);
 
 export default appRouter;
