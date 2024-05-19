@@ -8,10 +8,10 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "vite --host --open",
-    "start": "cross-env NODE_ENV=production node ./dist/app.js",
-    "build": "yarn run format:lint && vite build && yarn run minify:public && yarn run copy:views &&yarn run copy:assets",
-    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/app.js\" \"vite preview --host --open\"",
+    "dev": "concurrently \"vite-node --watch app.ts\" \"vite --host --open\"",
+    "start": "cross-env NODE_ENV=production node ./dist/app.es.js",
+    "build": "yarn run format:lint && npx tsc && vite build && yarn run minify:public && yarn run copy:views && yarn run copy:assets",
+    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/app.es.js\" \"vite preview --host --open\"",
     "build:preview": "yarn run build && yarn run preview",
     "format": "prettier --plugin=prettier-plugin-ejs --write .",
     "lint": "eslint --fix .",
@@ -20,7 +20,8 @@
     "minify:js": "esbuild ./public/scripts/*.js --outdir=./dist/public/scripts/ --allow-overwrite --minify",
     "minify:css": "esbuild ./public/styles/*.css --outdir=./dist/public/styles/ --allow-overwrite --minify",
     "copy:views": "cp -R ./src/views ./dist/views",
-    "copy:assets": "cp -R ./public/assets ./dist/public/assets"
+    "copy:assets": "cp -R ./public/assets ./dist/public/assets",
+    "tsc:watch": "tsc -w"
   },
   "dependencies": {
     "axios": "^1.4.0",
@@ -30,24 +31,24 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.0.2",
     "@eslint/js": "^9.0.0",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.12",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "esbuild": "^0.21.3",
     "eslint": "8.56.0",
-    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-alias": "^1.1.2",
-    "eslint-plugin-import": "^2.29.1",
     "globals": "^15.0.0",
-    "jsonc-eslint-parser": "^2.4.0",
+    "magic-string": "^0.30.10",
     "path": "^0.12.7",
     "prettier": "^3.2.5",
     "prettier-plugin-ejs": "^1.0.3",
-    "url": "^0.11.3",
+    "rollup-plugin-node-externals": "^7.1.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0",
     "vite": "^5.2.11",
-    "vite-plugin-node": "^3.1.0",
+    "vite-node": "^1.6.0",
     "vitest": "^1.5.3"
   }
 }
