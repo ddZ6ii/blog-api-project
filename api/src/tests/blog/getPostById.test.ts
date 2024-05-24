@@ -1,21 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import blog from '@store/blog.js';
+import { blog } from '@store/blog.ts';
+import { Post } from '@/ts/posts.interface.ts';
 
 describe('Retrive post by ID', () => {
-  it('should throw an error if missing ID', () => {
-    expect(() => blog.getPostById()).toThrowError('required');
+  it('should throw an error if undefined ID', () => {
+    expect(() => blog.getPostById(undefined)).toThrowError('required');
   });
 
   it('should throw an error if ID is not of type number', () => {
     expect(() => blog.getPostById('1')).toThrowError('number');
   });
 
-  it('should return an empty object if no corresponding post', () => {
-    expect(blog.getPostById(9999)).toEqual({});
+  it('should return undefined if no corresponding post', () => {
+    expect(blog.getPostById(9999)).toBeUndefined();
   });
 
   it('should return post specified by ID', () => {
-    const post = {
+    const post: Post = {
       id: 2,
       title: 'The Impact of Artificial Intelligence on Modern Businesses',
       content:

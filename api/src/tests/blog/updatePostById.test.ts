@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import blog from '@store/blog.js';
+import { blog } from '@store/blog.ts';
+import { Post } from '@/ts/posts.interface.ts';
 
-const updatedPostContent = {
+const updatedPostContent: Partial<Post> = {
   title: 'New Title',
   content: 'New Content',
   author: 'Mia Williams',
@@ -26,14 +27,14 @@ describe('Partially updated post content by ID', () => {
     }
   });
 
-  it('should throw an error if missing ID', async () => {
+  it('should throw an error if undefined ID', async () => {
     await expect(
-      blog.updatePostById(updatedPostContent, null),
+      blog.updatePostById(updatedPostContent, undefined),
     ).rejects.toThrowError('required');
   });
 
   it('should throw an error if missing newPost', async () => {
-    await expect(blog.updatePostById(null, 2)).rejects.toThrowError(
+    await expect(blog.updatePostById(undefined, 2)).rejects.toThrowError(
       'No post provided',
     );
   });
@@ -44,10 +45,10 @@ describe('Partially updated post content by ID', () => {
     ).rejects.toThrowError('number');
   });
 
-  it('should return an empty object if no corresponding post', async () => {
+  it('should return undefined if no corresponding post', async () => {
     await expect(
       blog.updatePostById(updatedPostContent, 9999),
-    ).resolves.toEqual({});
+    ).resolves.toBeUndefined();
   });
 
   it('should return the updated object', async () => {

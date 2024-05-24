@@ -3,8 +3,8 @@
 import express from 'express';
 import 'dotenv/config';
 import chalk from 'chalk';
-import apiRouter from '@/routers/apiRouter.js';
-import blog from '@/store/blog.js';
+import { blog } from '@store/blog.ts';
+import { apiRouter } from '@/routers/api.router.ts';
 
 const { DEV } = import.meta.env;
 const SERVER_PORT = parseInt(process.env.SERVER_API_PORT ?? '8000', 10);
@@ -22,7 +22,6 @@ async function init(): Promise<void> {
 await init();
 
 // Application-level middlewares.
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', apiRouter);
 

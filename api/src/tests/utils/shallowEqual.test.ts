@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import shallowEqual from '@utils/shallowEqual';
+import { shallowEqual } from '@utils/shallowEqual.ts';
 
 describe('shallowEqual', () => {
   it('should throw an error if missing an input argument', () => {
-    expect(() => shallowEqual({})).toThrowError('required');
+    expect(() => shallowEqual(undefined, {})).toThrowError('required');
   });
 
   it('should return false for different objects', () => {

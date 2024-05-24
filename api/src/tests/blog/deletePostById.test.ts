@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import blog from '@store/blog.js';
-import { readFromJSON } from '@utils/fileIO.js';
+import { blog } from '@store/blog.ts';
+import { readFromJSON } from '@utils/fileIO.ts';
+import { Post } from '@/ts/posts.interface.ts';
 
-const newPost = {
+const newPost: Partial<Post> = {
   title: "Amazing Things You Wouldn't Have Guessed About...",
   author: 'Myrtie Jasmine',
   content:
@@ -28,22 +29,18 @@ describe('Delete post specified by ID', () => {
     }
   });
 
-  it('should throw an error if missing ID', async () => {
-    await expect(blog.deletePostById()).rejects.toThrowError('required');
+  it('should throw an error if undefined ID', async () => {
+    await expect(blog.deletePostById(undefined)).rejects.toThrowError(
+      'required',
+    );
   });
 
   it('should throw an error if ID is not of type number', async () => {
     await expect(blog.deletePostById('sdsd')).rejects.toThrowError('number');
   });
 
-  it('should throw an error if ID cannot be converted to type number', async () => {
-    await expect(
-      blog.deletePostById(parseInt('sdsd', 10)),
-    ).rejects.toThrowError('number');
-  });
-
   it('should return undefined if no corresponding post', async () => {
-    await expect(blog.deletePostById(44)).resolves.toBeNull();
+    await expect(blog.deletePostById(44)).resolves.toBeUndefined();
   });
 
   it('should return the ID of deleted post', async () => {

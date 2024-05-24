@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import isValidPostId from '@utils/isValidPostId.js';
+import { isValidPostId } from '@utils/isValidPostId.ts';
 
 describe('blog.isValidPostId', () => {
   it('should throw an error if missing postId', () => {
-    expect(() => isValidPostId()).toThrowError('required');
+    expect(() => isValidPostId(undefined)).toThrowError('required');
   });
 
   it('should throw an error if postId is not of type number', () => {

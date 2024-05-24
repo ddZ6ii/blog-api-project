@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import isEmpty from '@utils/isEmpty.js';
+import { isEmpty } from '@utils/isEmpty.ts';
 
 describe('isEmpty', () => {
   it('should return true for null input', () => {
@@ -7,7 +7,7 @@ describe('isEmpty', () => {
   });
 
   it('should return true for undefined input', () => {
-    expect(isEmpty()).toBe(true);
+    expect(isEmpty(undefined)).toBe(true);
   });
 
   it('should return true for NaN input', () => {
