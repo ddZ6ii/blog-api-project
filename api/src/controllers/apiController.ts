@@ -1,174 +1,117 @@
-import { Response, Request } from 'express';
-import chalk from 'chalk';
+import { RequestHandler } from 'express';
 import { blog } from '@store/blog.ts';
-import { isEmpty } from '@utils/isEmpty.ts';
-import { SeachQuery } from '@/ts/searchQuery.interface.ts';
-import { Post, PostIdParam } from '@/ts/posts.interface.ts';
+import { Post, PostContent, PostIdParam, Search } from '@/types/post.type.ts';
+import { FindPostSchema } from '@/types/findPost.schema.ts';
+import { UpdatePostSchema } from '@/types/updatePost.schema.ts';
+import { SearchPostsSchema } from '@/types/searchPost.schema.ts';
+import { CreatePostStrictSchema } from '@/types/createPost.schema.ts';
+import { NotFoundError } from '@/errors/NotFoundError.ts';
+import { ServerError } from '@/errors/ServerError.ts';
+import { isEmpty } from '@/utils/isEmpty.ts';
 
-export const getAllPosts = (
-  req: Request<unknown, unknown, unknown, SeachQuery>,
-  res: Response,
+export const getAllPosts: RequestHandler<unknown, Post[], unknown, Search> = (
+  req,
+  res,
 ) => {
-  try {
-    const { sort, filter: filterText } = req.query;
-    const filteredPosts = blog.filterPosts(filterText);
-    const sortedPost = blog.sortPostsByDate(filteredPosts, sort);
-    return res.json(sortedPost);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to retrieve posts!', error.message));
-      return res.status(400).json({
-        status: 'error',
-        message: `Invalid search parameters! ${error.message}`,
-        code: 400,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
-  }
+  // Use Zod parse to format 'sort' query param(uppercase, if any).
+  const { filter: validatedFilter, sort: validatedSort } =
+    SearchPostsSchema.parse(req).query;
+  const filteredPosts = blog.filterPosts(validatedFilter);
+  const sortedPost = blog.sortPostsByDate(filteredPosts, validatedSort);
+  res.json(sortedPost);
 };
 
-export const getPostById = (req: Request<PostIdParam>, res: Response) => {
-  try {
-    const postId = parseInt(req.params.id, 10);
-    const post = blog.getPostById(postId);
-    if (!post) {
-      return res.status(404).json({
-        status: 'error',
-        message: `No existing post with ID: ${postId.toString()}`,
-        code: 404,
-      });
-    }
-    return res.json(post);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to retrieve post by ID!', error.message));
-      return res.status(400).json({
-        status: 'error',
-        message: `Invalid request parameter: ${error.message}`,
-        code: 400,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
+export const getPostById: RequestHandler<
+  PostIdParam,
+  unknown,
+  Post,
+  unknown
+> = (req, res) => {
+  // Use Zod parse to format id param (string -> number).
+  const { id: validatedPostId } = FindPostSchema.parse(req).params;
+  const post = blog.getPostById(validatedPostId);
+  if (!post) {
+    throw new NotFoundError(
+      `No existing post with 'id' ${validatedPostId.toString()}.`,
+    );
   }
+  res.json(post);
 };
 
-export const addPost = async (
-  req: Request<unknown, unknown, Post>,
-  res: Response,
-) => {
-  try {
-    if (isEmpty(req.body)) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'No post data provided',
-        code: 400,
-      });
-    }
-    const newPost = await blog.addPosts(req.body);
-    return res.json(newPost);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to create post!', error.message));
-      return res.status(500).json({
-        status: 'error',
-        message: `Failed to create post! ${error.message}`,
-        code: 500,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
+export const createPost: RequestHandler<
+  unknown,
+  Post,
+  PostContent,
+  unknown
+> = async (req, res, next) => {
+  // Use Zod parse to format post content (trim whitespaces and capitalize author's name).
+  const validatedPostContent = CreatePostStrictSchema.parse(req).body;
+  const createdPost = await blog.addPost(validatedPostContent);
+  if (isEmpty(createdPost)) {
+    /**
+     * Use the 'next' middleware function to forward asynchronous error.
+     * The 'next' function typically does not take in an argument but simply gets invoked to move the request to the next middleware in the stack. When given an input, it signals to the Express server that it should skip everything and go straight to the error handler.
+     */
+    next(new ServerError('Failed to create post!'));
+    return;
   }
+  res.json(createdPost);
 };
 
-export const updatePostById = async (
-  req: Request<PostIdParam, unknown, Partial<Post>>,
-  res: Response,
-) => {
-  try {
-    const postId = parseInt(req.params.id, 10);
-    const postContent = req.body;
-    const updatedPost = await blog.updatePostById(postContent, postId);
-    if (!updatedPost) {
-      return res.status(404).json({
-        status: 'error',
-        message: `No existing post with id: ${postId.toString()}`,
-        code: 404,
-      });
-    }
-    return res.json(updatedPost);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to update post!', error.message));
-      return res.status(400).json({
-        status: 'error',
-        message: `Invalid request! ${error.message}`,
-        code: 400,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
+export const updatePostById: RequestHandler<
+  PostIdParam,
+  Post,
+  Partial<Post>,
+  unknown
+> = async (req, res, next) => {
+  // Use Zod parse to format id param (string -> number).
+  const { id: validatedPostId } = UpdatePostSchema.parse(req).params;
+  const validatedPostContent = UpdatePostSchema.parse(req).body;
+  const updatedPost = await blog.updatePostById(
+    validatedPostContent,
+    validatedPostId,
+  );
+
+  if (!updatedPost) {
+    next(
+      new NotFoundError(
+        `No existing post with 'id' ${validatedPostId.toString()}.`,
+      ),
+    );
+    return;
   }
+  res.json(updatedPost);
 };
 
-export const deletePostById = async (
-  req: Request<PostIdParam>,
-  res: Response,
-) => {
-  try {
-    const postId = parseInt(req.params.id, 10);
-    const deletedPostId = await blog.deletePostById(postId);
-    if (!deletedPostId) {
-      return res.status(404).json({
-        status: 'error',
-        message: `No existing post with id: ${postId.toString()}`,
-        code: 404,
-      });
-    }
-    return res.sendStatus(200);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to delete post!', error.message));
-      return res.status(400).json({
-        status: 'error',
-        message: `Invalid request parameter! ${error.message}`,
-        code: 400,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
+export const deletePostById: RequestHandler<
+  PostIdParam,
+  unknown,
+  unknown,
+  unknown
+> = async (req, res, next) => {
+  // Use Zod parse to format id param (string -> number).
+  const { id: validatedPostId } = FindPostSchema.parse(req).params;
+  const deletedPostId = await blog.deletePostById(validatedPostId);
+  if (!deletedPostId) {
+    next(
+      new NotFoundError(
+        `No existing post with 'id' ${validatedPostId.toString()}.`,
+      ),
+    );
+    return;
   }
+  res.sendStatus(200);
 };
 
-export const resetPosts = async (_: Request, res: Response) => {
+export const resetPosts: RequestHandler = async (_req, res, next) => {
   try {
     const posts = await blog.resetPosts();
-    return res.status(200).json(posts);
+    res.status(200).json(posts);
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(chalk.red('Failed to reset posts!', error.message));
-      return res.status(500).json({
-        status: 'error',
-        message: `Failed to reset posts! ${error.message}`,
-        code: 400,
-      });
-    }
-    return res
-      .status(500)
-      .json({ message: 'Ooops... An unexpected error has occured.' });
+    next(new ServerError('Failed to reset posts.'));
   }
 };
 
-export const handleInvalidRoutes = (_: Request, res: Response) => {
-  res.status(404).json({
-    status: 'error',
-    message: `Invalid route`,
-    code: 404,
-  });
+export const handleInvalidRoutes: RequestHandler = () => {
+  throw new NotFoundError('Invalid route.');
 };

@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
 import { readFromJSON } from '@utils/fileIO.ts';
-import { Post } from '@/ts/posts.interface.ts';
+import { PostContent } from '@/types/post.type.ts';
 
-const newPost: Partial<Post> = {
+const validPostContent: PostContent = {
   title: "Amazing Things You Wouldn't Have Guessed About...",
   author: 'Myrtie Jasmine',
   content:
@@ -29,28 +29,18 @@ describe('Delete post specified by ID', () => {
     }
   });
 
-  it('should throw an error if undefined ID', async () => {
-    await expect(blog.deletePostById(undefined)).rejects.toThrowError(
-      'required',
-    );
-  });
-
-  it('should throw an error if ID is not of type number', async () => {
-    await expect(blog.deletePostById('sdsd')).rejects.toThrowError('number');
-  });
-
   it('should return undefined if no corresponding post', async () => {
     await expect(blog.deletePostById(44)).resolves.toBeUndefined();
   });
 
-  it('should return the ID of deleted post', async () => {
-    const [addedPost] = await blog.addPosts(newPost);
+  it('should return deleted post ID', async () => {
+    const addedPost = await blog.addPost(validPostContent);
     const deletedPostId = await blog.deletePostById(addedPost.id);
     expect(deletedPostId).toBe(addedPost.id);
   });
 
   it('JSON file should not contain deleted post', async () => {
-    const [addedPost] = await blog.addPosts(newPost);
+    const addedPost = await blog.addPost(validPostContent);
     const deletedPostId = await blog.deletePostById(addedPost.id);
     const jsonContent = await readFromJSON();
     const postIds = jsonContent.map((post) => post.id);

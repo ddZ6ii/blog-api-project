@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
-import { Post } from '@/ts/posts.interface.ts';
+import { PostContent } from '@/types/post.type.ts';
 
-const updatedPostContent: Partial<Post> = {
+const updatedPostContent: Partial<PostContent> = {
   title: 'New Title',
   content: 'New Content',
   author: 'Mia Williams',
@@ -25,24 +25,6 @@ describe('Partially updated post content by ID', () => {
     } catch (err) {
       console.error('Failed to reset posts!', err);
     }
-  });
-
-  it('should throw an error if undefined ID', async () => {
-    await expect(
-      blog.updatePostById(updatedPostContent, undefined),
-    ).rejects.toThrowError('required');
-  });
-
-  it('should throw an error if missing newPost', async () => {
-    await expect(blog.updatePostById(undefined, 2)).rejects.toThrowError(
-      'No post provided',
-    );
-  });
-
-  it('should throw an error if ID is not of type number', async () => {
-    await expect(() =>
-      blog.updatePostById(updatedPostContent, '2'),
-    ).rejects.toThrowError('number');
   });
 
   it('should return undefined if no corresponding post', async () => {

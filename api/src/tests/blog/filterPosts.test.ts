@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
 import { readFromJSON } from '@/utils/fileIO.ts';
-import { Post } from '@/ts/posts.type.ts';
+import { Post } from '@/types/post.type.ts';
 
 describe('Filter posts', () => {
   let posts: Post[];

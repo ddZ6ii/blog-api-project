@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
 import { readFromJSON } from '@utils/fileIO.ts';
-import { Post } from '@/ts/posts.interface.ts';
+import { PostContent } from '@/types/post.type.ts';
 
-const newPost: Partial<Post> = {
+const validPostContent: PostContent = {
   title: "Amazing Things You Wouldn't Have Guessed About...",
   author: 'Myrtie Jasmine',
   content:
@@ -29,22 +29,16 @@ describe('Adding a new post', () => {
     }
   });
 
-  it('should throw an error if no provided post', async () => {
-    await expect(blog.addPosts(undefined)).rejects.toThrow('provided');
-  });
-
   it('should return the newly added post', async () => {
-    await expect(blog.addPosts(newPost)).resolves.toMatchObject([
-      {
-        title: newPost.title,
-        author: newPost.author,
-        content: newPost.content,
-      },
-    ]);
+    await expect(blog.addPost(validPostContent)).resolves.toMatchObject({
+      title: validPostContent.title,
+      author: validPostContent.author,
+      content: validPostContent.content,
+    });
   });
 
   it('JSON file should contain the newly added post', async () => {
-    const [addedPost] = await blog.addPosts(newPost);
+    const addedPost = await blog.addPost(validPostContent);
     const jsonContent = await readFromJSON();
     const match = jsonContent.find((post) => post.id === addedPost.id);
     expect(match?.id).toEqual(addedPost.id);

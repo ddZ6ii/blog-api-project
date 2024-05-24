@@ -1,16 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
-import { Post } from '@/ts/posts.interface.ts';
+import { Post } from '@/types/post.type.ts';
 
 describe('Retrive post by ID', () => {
-  it('should throw an error if undefined ID', () => {
-    expect(() => blog.getPostById(undefined)).toThrowError('required');
-  });
-
-  it('should throw an error if ID is not of type number', () => {
-    expect(() => blog.getPostById('1')).toThrowError('number');
-  });
-
   it('should return undefined if no corresponding post', () => {
     expect(blog.getPostById(9999)).toBeUndefined();
   });

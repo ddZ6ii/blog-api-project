@@ -12,12 +12,13 @@ import {
   beforeAll,
   afterAll,
 } from 'vitest';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { blog } from '@store/blog.ts';
 import { readFromJSON } from '@/utils/fileIO.ts';
-import { Post } from '@/ts/posts.interface.ts';
-import { PostId } from '@/ts/posts.type.ts';
+import { Post, PostContent } from '@/types/post.type.ts';
+import { SortSchema } from '@/types/post.schema.ts';
+import { CustomErrorContent } from '@/errors/CustomError.ts';
 import INITIAL_POSTS from '@data/initialPosts.json';
 
 const TIMEOUT = 30000; // 30 sec
@@ -64,7 +65,7 @@ describe.sequential('API routes', () => {
       }
     }, TIMEOUT);
 
-    describe.sequential('...default sorted by DESC order)', () => {
+    describe.sequential("...default sorted in 'DESC' order)", () => {
       let posts: Post[];
       let response: AxiosResponse<Post[]>;
 
@@ -97,13 +98,13 @@ describe.sequential('API routes', () => {
       it.sequential(
         'should return all of the posts in DESC order (default sorting)',
         () => {
-          const sortedPosts = blog.sortPostsByDate(posts, 'desc');
+          const sortedPosts = blog.sortPostsByDate(posts, SortSchema.enum.DESC);
           expect(response.data).toStrictEqual(sortedPosts);
         },
       );
     });
 
-    describe.sequential('...sorted by ASC order', () => {
+    describe.sequential("...sorted in 'ASC' order", () => {
       let posts: Post[];
       let response: AxiosResponse<Post[]>;
 
@@ -134,12 +135,12 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('should return all of the posts in ascending order', () => {
-        const sortedPosts = blog.sortPostsByDate(posts, 'asc');
+        const sortedPosts = blog.sortPostsByDate(posts, SortSchema.enum.ASC);
         expect(response.data).toStrictEqual(sortedPosts);
       });
     });
 
-    describe.sequential('...matching search filter', () => {
+    describe.sequential("...matching 'search' filter", () => {
       let posts: Post[];
       let response: AxiosResponse<Post[]>;
 
@@ -173,6 +174,92 @@ describe.sequential('API routes', () => {
         expect(response.data).toStrictEqual([posts[0]]);
       });
     });
+
+    describe.sequential("...with invalid 'sort' query parameter", () => {
+      let errorResponse: AxiosResponse | undefined;
+      let errorContent: CustomErrorContent;
+
+      beforeAll(async () => {
+        try {
+          await axios.get(`${API_BASE_URL}/posts?sort=invalid`);
+        } catch (err: unknown) {
+          if (err instanceof AxiosError) {
+            errorResponse = err.response;
+            errorContent = err.response?.data as CustomErrorContent;
+          } else {
+            console.error('Failed to search matching posts!', err);
+          }
+        }
+      }, TIMEOUT);
+
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 400', () => {
+        expect(errorContent.code).toBe(400);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(errorContent).toMatchObject({
+          message: expect.stringMatching(
+            /expected 'sort' to be 'ASC' or 'DESC'/i,
+          ) as string,
+        });
+      });
+
+      it.sequential('response should have content-type application', () => {
+        expect(errorResponse?.headers['content-type']).toContain(
+          'application/json',
+        );
+      });
+
+      it.sequential('response data should be of type object', () => {
+        expectTypeOf(errorContent).toBeObject();
+      });
+    });
+
+    describe.sequential('...with invalid additional query parameter', () => {
+      let errorResponse: AxiosResponse | undefined;
+      let errorContent: CustomErrorContent;
+
+      beforeAll(async () => {
+        try {
+          await axios.get(`${API_BASE_URL}/posts?any=unexpected`);
+        } catch (err: unknown) {
+          if (err instanceof AxiosError) {
+            errorResponse = err.response;
+            errorContent = err.response?.data as CustomErrorContent;
+          } else {
+            console.error('Failed to search matching posts!', err);
+          }
+        }
+      }, TIMEOUT);
+
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 400', () => {
+        expect(errorContent.code).toBe(400);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(errorResponse?.data).toMatchObject({
+          message: expect.stringMatching(/unrecognized key/i) as string,
+        });
+      });
+
+      it.sequential('response should have content-type application', () => {
+        expect(errorResponse?.headers['content-type']).toContain(
+          'application/json',
+        );
+      });
+
+      it.sequential('response data should be of type object', () => {
+        expectTypeOf(errorContent).toBeObject();
+      });
+    });
   });
 
   describe.sequential('GET request for post specified by...', () => {
@@ -197,9 +284,10 @@ describe.sequential('API routes', () => {
       }
     }, TIMEOUT);
 
-    describe.sequential('...invalid ID)', () => {
-      let response: AxiosResponse<object>;
-      const postId: PostId = 'invalid';
+    describe.sequential("...invalid 'id')", () => {
+      let response: AxiosResponse;
+      let errorContent: CustomErrorContent;
+      const postId = 'invalid';
 
       beforeAll(async () => {
         try {
@@ -207,13 +295,26 @@ describe.sequential('API routes', () => {
             `${API_BASE_URL}/posts/${postId}`,
             options,
           );
+          if (response.status !== 200) {
+            errorContent = response.data as CustomErrorContent;
+          }
         } catch (err) {
           console.error(`Failed to fetch post with ID ${postId}!`, err);
         }
       }, TIMEOUT);
 
-      it.sequential('response status should be 400', () => {
-        expect(response.status).toBe(400);
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 400', () => {
+        expect(errorContent.code).toBe(400);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(errorContent).toMatchObject({
+          message: expect.stringMatching(/'id' must be a number/i) as string,
+        });
       });
 
       it.sequential('response should have content-type application', () => {
@@ -221,22 +322,14 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('response data should be of type object', () => {
-        expectTypeOf(response.data).toBeObject();
+        expectTypeOf(errorContent).toBeObject();
       });
-
-      it.sequential(
-        'response data should contain the expected error message',
-        () => {
-          expect(response.data).toMatchObject({
-            message: expect.stringMatching(/invalid request parameter/i),
-          });
-        },
-      );
     });
 
     describe.sequential('...valid but non-matching ID)', () => {
-      let response: AxiosResponse<object>;
-      const postId: PostId = '9999';
+      let response: AxiosResponse;
+      let errorContent: CustomErrorContent;
+      const postId = '9999';
 
       beforeAll(async () => {
         try {
@@ -244,13 +337,28 @@ describe.sequential('API routes', () => {
             `${API_BASE_URL}/posts/${postId}`,
             options,
           );
+          if (response.status !== 200) {
+            errorContent = response.data as CustomErrorContent;
+          }
         } catch (err) {
           console.error(`Failed to fetch post with ID ${postId}!`, err);
         }
       }, TIMEOUT);
 
-      it.sequential('response status should be 404', () => {
-        expect(response.status).toBe(404);
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 404', () => {
+        expect(errorContent.code).toBe(404);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(errorContent).toMatchObject({
+          message: expect.stringMatching(
+            /no existing post with 'id'/i,
+          ) as string,
+        });
       });
 
       it.sequential('response should have content-type application', () => {
@@ -258,23 +366,14 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('response data should be of type object', () => {
-        expectTypeOf(response.data).toBeObject();
+        expectTypeOf(errorContent).toBeObject();
       });
-
-      it.sequential(
-        'response data should contain the expected error message',
-        () => {
-          expect(response.data).toMatchObject({
-            message: expect.stringMatching(/no existing post with id/i),
-          });
-        },
-      );
     });
 
     describe.sequential('...valid and matching ID)', () => {
       let posts: Post[];
       let response: AxiosResponse<Post>;
-      const postId: PostId = '2';
+      const postId = '2';
 
       beforeAll(async () => {
         try {
@@ -326,20 +425,39 @@ describe.sequential('API routes', () => {
       }
     }, TIMEOUT);
 
-    describe.sequential('...without body request)', () => {
-      let response: AxiosResponse<object>;
+    describe.sequential('...without body request', () => {
+      let response: AxiosResponse;
+      let errorContent: CustomErrorContent;
       const body = undefined;
 
       beforeAll(async () => {
         try {
-          response = await axios.post(`${API_BASE_URL}/posts`, body, options);
+          response = await axios.post(`${API_BASE_URL}/posts`, body, {
+            ...options,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          });
+          if (response.status !== 200) {
+            errorContent = response.data as CustomErrorContent;
+          }
         } catch (err) {
           console.error('Failed to create post!', err);
         }
       }, TIMEOUT);
 
-      it.sequential('response status should be 400', () => {
-        expect(response.status).toBe(400);
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 400', () => {
+        expect(errorContent.code).toBe(400);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(response.data).toMatchObject({
+          message: expect.stringMatching(/required/i) as string,
+        });
       });
 
       it.sequential('response should have content-type application', () => {
@@ -347,30 +465,30 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('response data should be of type object', () => {
-        expectTypeOf(response.data).toBeObject();
+        expectTypeOf(errorContent).toBeObject();
       });
-
-      it.sequential(
-        'response data should contain the expected error message',
-        () => {
-          expect(response.data).toMatchObject({
-            message: expect.stringMatching(/no post data/i),
-          });
-        },
-      );
     });
 
-    describe.sequential('...with body request)', () => {
+    describe.sequential('...with valid body request', () => {
       let response: AxiosResponse<Post[]>;
-      const newPost: Partial<Post> = {
+
+      const validPostContent: PostContent = {
         title: "Amazing Things You Wouldn't Have Guessed About...",
-        author: 'Myrtie Jasmine',
         content:
           'Pellentesque justo nisl, laoreet ac magna vel, cursus consectetu  sem. Vestibulum in sem eu velit volutpat pharetra eu sit amet nunc. Aliquam in interdum lacus Nam facilisis turpis sit amet leo tincidunt auctor. Mauris cursus hendrerit facilisis. Curabitur purus magna, feugiat sed diam id, posuere consectetur ipsum. Nulla luctus lobortis nibh fringilla porta. Sed a ligula ut nibh placerat tincidunt eget et neque. Fusce at nunc tempus est hendrerit maximus. Pellentesque viverra eu mi nec accumsan. Fusce vitae efficitur est id eleifend sapien. In faucibus enim eget leo dignissim facilisis.',
+        author: 'Myrtie Jasmine',
       };
       beforeAll(async () => {
         try {
-          response = await axios.post(`${API_BASE_URL}/posts`, newPost);
+          response = await axios.post(
+            `${API_BASE_URL}/posts`,
+            validPostContent,
+            {
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+            },
+          );
         } catch (err) {
           console.error('Failed to create post!', err);
         }
@@ -392,14 +510,81 @@ describe.sequential('API routes', () => {
         expect(response.headers['content-type']).toContain('application/json');
       });
 
-      it.sequential('response data should be of type array', () => {
-        expectTypeOf(response.data).toBeArray();
+      it.sequential('response data should be of type object', () => {
+        expectTypeOf(response.data).toBeObject();
       });
 
       it.sequential('should return the created post', () => {
-        expect(response.data).toMatchObject([newPost]);
+        expect(response.data).toMatchObject(validPostContent);
       });
     });
+
+    describe.sequential(
+      '...with invalid additional field within body request',
+      () => {
+        let response: AxiosResponse;
+        let errorContent: CustomErrorContent;
+
+        const validPostContent: unknown = {
+          title: "Amazing Things You Wouldn't Have Guessed About...",
+          content:
+            'Pellentesque justo nisl, laoreet ac magna vel, cursus consectetu  sem. Vestibulum in sem eu velit volutpat pharetra eu sit amet nunc. Aliquam in interdum lacus Nam facilisis turpis sit amet leo tincidunt auctor. Mauris cursus hendrerit facilisis. Curabitur purus magna, feugiat sed diam id, posuere consectetur ipsum. Nulla luctus lobortis nibh fringilla porta. Sed a ligula ut nibh placerat tincidunt eget et neque. Fusce at nunc tempus est hendrerit maximus. Pellentesque viverra eu mi nec accumsan. Fusce vitae efficitur est id eleifend sapien. In faucibus enim eget leo dignissim facilisis.',
+          author: 'Myrtie Jasmine',
+          any: 'any',
+        };
+        beforeAll(async () => {
+          try {
+            response = await axios.post(
+              `${API_BASE_URL}/posts`,
+              validPostContent,
+              {
+                ...options,
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              },
+            );
+            if (response.status !== 200) {
+              errorContent = response.data as CustomErrorContent;
+            }
+          } catch (err) {
+            console.error('Failed to create post!', err);
+          }
+        }, TIMEOUT);
+
+        afterAll(async () => {
+          try {
+            await blog.resetPosts();
+          } catch (err) {
+            console.error('Failed to reset posts!', err);
+          }
+        }, TIMEOUT);
+
+        it.sequential("error name should be 'error'", () => {
+          expect(errorContent.status).toMatch('error');
+        });
+
+        it.sequential('error status code should be 400', () => {
+          expect(errorContent.code).toBe(400);
+        });
+
+        it.sequential('error should contain the expected error message', () => {
+          expect(response.data).toMatchObject({
+            message: expect.stringMatching(/unrecognized key/i) as string,
+          });
+        });
+
+        it.sequential('response should have content-type application', () => {
+          expect(response.headers['content-type']).toContain(
+            'application/json',
+          );
+        });
+
+        it.sequential('response data should be of type object', () => {
+          expectTypeOf(errorContent).toBeObject();
+        });
+      },
+    );
   });
 
   describe.sequential(
@@ -426,10 +611,11 @@ describe.sequential('API routes', () => {
         }
       }, TIMEOUT);
 
-      describe.sequential('...invalid ID)', () => {
-        let response: AxiosResponse<object>;
-        const postId: PostId = 'invalid';
-        const updatedPostContent: Partial<Post> = {
+      describe.sequential("...invalid 'id'", () => {
+        let response: AxiosResponse;
+        let errorContent: CustomErrorContent;
+        const postId = 'invalid';
+        const updatedPostContent: Partial<PostContent> = {
           title: 'New Title',
           content: 'New Content',
           author: 'Mia Williams',
@@ -440,15 +626,33 @@ describe.sequential('API routes', () => {
             response = await axios.patch(
               `${API_BASE_URL}/posts/${postId}`,
               updatedPostContent,
-              options,
+              {
+                ...options,
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              },
             );
+            if (response.status !== 200) {
+              errorContent = response.data as CustomErrorContent;
+            }
           } catch (err) {
             console.error(`Failed to update post with ID ${postId}!`, err);
           }
         }, TIMEOUT);
 
-        it.sequential('response status should be 400', () => {
-          expect(response.status).toBe(400);
+        it.sequential("error name should be 'error'", () => {
+          expect(errorContent.status).toMatch('error');
+        });
+
+        it.sequential('error status code should be 400', () => {
+          expect(errorContent.code).toBe(400);
+        });
+
+        it.sequential('error should contain the expected error message', () => {
+          expect(response.data).toMatchObject({
+            message: expect.stringMatching(/'id' must be a number/i) as string,
+          });
         });
 
         it.sequential('response should have content-type application', () => {
@@ -458,23 +662,15 @@ describe.sequential('API routes', () => {
         });
 
         it.sequential('response data should be of type object', () => {
-          expectTypeOf(response.data).toBeObject();
+          expectTypeOf(errorContent).toBeObject();
         });
-
-        it.sequential(
-          'response data should contain the expected error message',
-          () => {
-            expect(response.data).toMatchObject({
-              message: expect.stringMatching(/invalid request/i),
-            });
-          },
-        );
       });
 
-      describe.sequential('...valid but non-matching ID)', () => {
-        let response: AxiosResponse<object>;
-        const postId: PostId = '9999';
-        const updatedPostContent: Partial<Post> = {
+      describe.sequential("...valid but non-matching 'id", () => {
+        let response: AxiosResponse;
+        let errorContent: CustomErrorContent;
+        const postId = '9999';
+        const updatedPostContent: Partial<PostContent> = {
           title: 'New Title',
           content: 'New Content',
           author: 'Mia Williams',
@@ -485,15 +681,35 @@ describe.sequential('API routes', () => {
             response = await axios.patch(
               `${API_BASE_URL}/posts/${postId}`,
               updatedPostContent,
-              options,
+              {
+                ...options,
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              },
             );
+            if (response.status !== 200) {
+              errorContent = response.data as CustomErrorContent;
+            }
           } catch (err) {
             console.error(`Failed to update post with ID ${postId}!`, err);
           }
         }, TIMEOUT);
 
-        it.sequential('response status should be 404', () => {
-          expect(response.status).toBe(404);
+        it.sequential("error name should be 'error'", () => {
+          expect(errorContent.status).toMatch('error');
+        });
+
+        it.sequential('error status code should be 404', () => {
+          expect(errorContent.code).toBe(404);
+        });
+
+        it.sequential('error should contain the expected error message', () => {
+          expect(response.data).toMatchObject({
+            message: expect.stringMatching(
+              /no existing post with 'id'/i,
+            ) as string,
+          });
         });
 
         it.sequential('response should have content-type application', () => {
@@ -503,47 +719,47 @@ describe.sequential('API routes', () => {
         });
 
         it.sequential('response data should be of type object', () => {
-          expectTypeOf(response.data).toBeObject();
+          expectTypeOf(errorContent).toBeObject();
         });
-
-        it.sequential(
-          'response data should contain the expected error message',
-          () => {
-            expect(response.data).toMatchObject({
-              message: expect.stringMatching(/no existing post/i),
-            });
-          },
-        );
       });
 
       describe.sequential(
-        '...valid and matching ID but without body request)',
+        "...valid and matching 'id' but without body request",
         () => {
-          let response: AxiosResponse<object>;
-          const updatedPostContent = undefined;
+          let response: AxiosResponse<Post>;
+          const postContent: Partial<PostContent> = {};
           let posts: Post[];
-          let postId: PostId;
+          let postId: number;
 
           beforeAll(async () => {
             try {
               posts = await readFromJSON();
-              postId = posts.at(-1)?.id;
-              if (!postId) throw new Error('Post ID is undefined');
+              if (posts.length) {
+                postId = posts[posts.length - 1].id;
+              }
+              if (!postId) {
+                throw new Error("'id' is undefined");
+              }
               response = await axios.patch(
                 `${API_BASE_URL}/posts/${postId.toString()}`,
-                updatedPostContent,
-                options,
+                postContent,
+                {
+                  ...options,
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                },
               );
             } catch (err) {
               console.error(
-                `Failed to update post with ID ${postId ? postId.toString() : ''}!`,
+                `Failed to update post with 'id' ${postId.toString()}!`,
                 err,
               );
             }
           }, TIMEOUT);
 
-          it.sequential('response status should be 400', () => {
-            expect(response.status).toBe(400);
+          it.sequential('response status should be 200', () => {
+            expect(response.status).toBe(200);
           });
 
           it.sequential('response should have content-type application', () => {
@@ -556,21 +772,16 @@ describe.sequential('API routes', () => {
             expectTypeOf(response.data).toBeObject();
           });
 
-          it.sequential(
-            'response data should contain the expected error message',
-            () => {
-              expect(response.data).toMatchObject({
-                message: expect.stringMatching(/invalid request/i),
-              });
-            },
-          );
+          it.sequential('should return the updated post', () => {
+            expect(response.data.id).toBe(posts[posts.length - 1].id);
+          });
         },
       );
 
       describe.sequential('...valid ID and with body request)', () => {
         let response: AxiosResponse<Post>;
-        const postId: PostId = '2';
-        const updatedPostContent: Partial<Post> = {
+        const postId = '2';
+        const updatedContent: Partial<PostContent> = {
           title: 'New Title',
           content: 'New Content',
           author: 'Mia Williams',
@@ -580,10 +791,15 @@ describe.sequential('API routes', () => {
           try {
             response = await axios.patch(
               `${API_BASE_URL}/posts/${postId}`,
-              updatedPostContent,
+              updatedContent,
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              },
             );
           } catch (err) {
-            console.error(`Failed to update post with ID ${postId}!`, err);
+            console.error(`Failed to update post with 'id' ${postId}!`, err);
           }
         }, TIMEOUT);
 
@@ -602,7 +818,7 @@ describe.sequential('API routes', () => {
         });
 
         it.sequential('should return the updated post', () => {
-          expect(response.data).toMatchObject(updatedPostContent);
+          expect(response.data).toMatchObject(updatedContent);
         });
       });
     },
@@ -631,8 +847,9 @@ describe.sequential('API routes', () => {
     }, TIMEOUT);
 
     describe.sequential('...invalid ID)', () => {
-      let response: AxiosResponse<object>;
-      const postId: PostId = 'invalid';
+      let response: AxiosResponse;
+      let errorContent: CustomErrorContent;
+      const postId = 'invalid';
 
       beforeAll(async () => {
         try {
@@ -641,13 +858,26 @@ describe.sequential('API routes', () => {
             `${API_BASE_URL}/posts/${postId}`,
             options,
           );
+          if (response.status !== 200) {
+            errorContent = response.data as CustomErrorContent;
+          }
         } catch (err) {
-          console.error(`Failed to delete post with ID ${postId}!`, err);
+          console.error(`Failed to delete post with 'id' ${postId}!`, err);
         }
       }, TIMEOUT);
 
-      it.sequential('response status should be 400', () => {
-        expect(response.status).toBe(400);
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 400', () => {
+        expect(errorContent.code).toBe(400);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(response.data).toMatchObject({
+          message: expect.stringMatching(/'id' must be a number/i) as string,
+        });
       });
 
       it.sequential('response should have content-type application', () => {
@@ -655,22 +885,14 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('response data should be of type object', () => {
-        expectTypeOf(response.data).toBeObject();
+        expectTypeOf(errorContent).toBeObject();
       });
-
-      it.sequential(
-        'response data should contain the expected error message',
-        () => {
-          expect(response.data).toMatchObject({
-            message: expect.stringMatching(/invalid request parameter/i),
-          });
-        },
-      );
     });
 
     describe.sequential('...valid but non-matching ID)', () => {
-      let response: AxiosResponse<object>;
-      const postId: PostId = '9999';
+      let response: AxiosResponse;
+      let errorContent: CustomErrorContent;
+      const postId = '9999';
 
       beforeAll(async () => {
         try {
@@ -679,13 +901,28 @@ describe.sequential('API routes', () => {
             `${API_BASE_URL}/posts/${postId}`,
             options,
           );
+          if (response.status !== 200) {
+            errorContent = response.data as CustomErrorContent;
+          }
         } catch (err) {
-          console.error(`Failed to fetch post with ID ${postId}!`, err);
+          console.error(`Failed to fetch post with 'id' ${postId}!`, err);
         }
       }, TIMEOUT);
 
-      it.sequential('response status should be 404', () => {
-        expect(response.status).toBe(404);
+      it.sequential("error name should be 'error'", () => {
+        expect(errorContent.status).toMatch('error');
+      });
+
+      it.sequential('error status code should be 404', () => {
+        expect(errorContent.code).toBe(404);
+      });
+
+      it.sequential('error should contain the expected error message', () => {
+        expect(response.data).toMatchObject({
+          message: expect.stringMatching(
+            /no existing post with 'id'/i,
+          ) as string,
+        });
       });
 
       it.sequential('response should have content-type application', () => {
@@ -693,35 +930,30 @@ describe.sequential('API routes', () => {
       });
 
       it.sequential('response data should be of type object', () => {
-        expectTypeOf(response.data).toBeObject();
+        expectTypeOf(errorContent).toBeObject();
       });
-
-      it.sequential(
-        'response data should contain the expected error message',
-        () => {
-          expect(response.data).toMatchObject({
-            message: expect.stringMatching(/no existing post with id/i),
-          });
-        },
-      );
     });
 
     describe.sequential('...valid and matching ID)', () => {
       let response: AxiosResponse<string>;
-      const postId: PostId = '3';
-      const newPost: Partial<Post> = {
+      const postId = '3';
+      const newPost: Partial<PostContent> = {
         title: "Amazing Things You Wouldn't Have Guessed About...",
-        author: 'Myrtie Jasmine',
         content:
           'Pellentesque justo nisl, laoreet ac magna vel, cursus consectetu  sem. Vestibulum in sem eu velit volutpat pharetra eu sit amet nunc. Aliquam in interdum lacus Nam facilisis turpis sit amet leo tincidunt auctor. Mauris cursus hendrerit facilisis. Curabitur purus magna, feugiat sed diam id, posuere consectetur ipsum. Nulla luctus lobortis nibh fringilla porta. Sed a ligula ut nibh placerat tincidunt eget et neque. Fusce at nunc tempus est hendrerit maximus. Pellentesque viverra eu mi nec accumsan. Fusce vitae efficitur est id eleifend sapien. In faucibus enim eget leo dignissim facilisis.',
+        author: 'Myrtie Jasmine',
       };
 
       beforeAll(async () => {
         try {
-          await axios.post(`${API_BASE_URL}/posts`, newPost);
+          await axios.post(`${API_BASE_URL}/posts`, newPost, {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          });
           response = await axios.delete(`${API_BASE_URL}/posts/${postId}`);
         } catch (err) {
-          console.error(`Failed to delete post with ID ${postId}!`, err);
+          console.error(`Failed to delete post with 'id' ${postId}!`, err);
         }
       }, TIMEOUT);
 
@@ -737,7 +969,7 @@ describe.sequential('API routes', () => {
         expectTypeOf(response.data).toBeString();
       });
 
-      it.sequential('should return expect success message', () => {
+      it.sequential('should return expected success message', () => {
         expect(response.data).match(/ok/i);
       });
     });
@@ -766,9 +998,9 @@ describe.sequential('API routes', () => {
       expectTypeOf(response.data).toBeArray();
     });
 
-    // it.sequential('should return the expected number of posts', () => {
-    //   expect(response.data).toHaveLength(INITIAL_POSTS.length);
-    // });
+    it.sequential('should return the expected number of posts', () => {
+      expect(response.data).toHaveLength(INITIAL_POSTS.length);
+    });
 
     it.sequential('should return all initial posts', () => {
       expect(response.data).toStrictEqual(INITIAL_POSTS);
@@ -776,20 +1008,34 @@ describe.sequential('API routes', () => {
   });
 
   describe.sequential("GET request to undefined API's endpoint", () => {
-    let response: AxiosResponse<object>;
+    let response: AxiosResponse;
+    let errorContent: CustomErrorContent;
     // Prevent axios from throwing an error if HTTP code is not within the 200 range.
     const options: AxiosRequestConfig = { validateStatus: null };
 
     beforeAll(async () => {
       try {
         response = await axios.get(`${API_BASE_URL}/invalid`, options);
+        if (response.status !== 200) {
+          errorContent = response.data as CustomErrorContent;
+        }
       } catch (err) {
         console.error('Failed request to invalid endpoint!', err);
       }
     }, TIMEOUT);
 
-    it.sequential('response status should be 404', () => {
-      expect(response.status).toBe(404);
+    it.sequential("error name should be 'error'", () => {
+      expect(errorContent.status).toMatch('error');
+    });
+
+    it.sequential('error status code should be 404', () => {
+      expect(errorContent.code).toBe(404);
+    });
+
+    it.sequential('error should contain the expected error message', () => {
+      expect(response.data).toMatchObject({
+        message: expect.stringMatching(/invalid route/i) as string,
+      });
     });
 
     it.sequential('response should have content-type application', () => {
@@ -797,16 +1043,7 @@ describe.sequential('API routes', () => {
     });
 
     it.sequential('response data should be of type object', () => {
-      expectTypeOf(response.data).toBeObject();
+      expectTypeOf(errorContent).toBeObject();
     });
-
-    it.sequential(
-      'response data should contain the expected error message',
-      () => {
-        expect(response.data).toMatchObject({
-          message: expect.stringMatching(/invalid route/i),
-        });
-      },
-    );
   });
 });

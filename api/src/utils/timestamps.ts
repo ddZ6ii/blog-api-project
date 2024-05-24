@@ -1,14 +1,9 @@
-/**
- * Convert a date from the ISO string format to timestamp.
- * @param {string} isoStringDate
- * @returns {number}
- */
-export const toTimeStamp = (isoStringDate: string): number =>
-  Date.parse(isoStringDate);
+// Convert a date from ISO string format to timestamp.
+export function toTimeStamp(isoStringDate: string) {
+  return Date.parse(isoStringDate);
+}
 
-/**
- * Create a string representing the current date in ISO format YYYY-MM-DDTHH:mm:ss.sssZ.
- * The timezone is always UTC, as denoted by the suffix Z.
- * @returns {string}
- */
-export const toISOString = (): string => new Date().toISOString();
+// Create a string representing the current date in ISO format (YYYY-MM-DDTHH:mm:ss.sssZ).
+export function toISOString() {
+  return new Date().toISOString();
+}

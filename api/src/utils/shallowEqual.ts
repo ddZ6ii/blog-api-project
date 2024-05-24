@@ -1,10 +1,5 @@
-/**
- * Determine whether 2 objects are equals via a shallow comparison.
- * @param {unknown} obj1
- * @param {unknown} obj2
- * @returns {boolean}
- */
-export const shallowEqual = (obj1: unknown, obj2: unknown) => {
+// Determine whether 2 objects are equals via shallow comparison.
+export function shallowEqual(obj1: unknown, obj2: unknown) {
   if (obj1 == null || obj2 == null)
     throw new Error('Input arguments required.');
   if (typeof obj1 !== typeof obj2) return false;
@@ -14,4 +9,4 @@ export const shallowEqual = (obj1: unknown, obj2: unknown) => {
   return keys1.every(
     (key) => obj1[key as keyof typeof obj1] === obj2[key as keyof typeof obj2],
   );
-};
+}

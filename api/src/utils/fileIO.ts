@@ -1,9 +1,8 @@
 import fs, { FileHandle } from 'node:fs/promises';
 import { PathLike } from 'node:fs';
 import { join } from 'node:path';
-import { Post } from '@/ts/posts.interface.ts';
+import { Post } from '@/types/post.type.ts';
 
-const __dirname = import.meta.dirname;
 const FILE_NAME = 'posts.json';
 const FILE_PATH = join(
   __dirname,
@@ -11,11 +10,7 @@ const FILE_PATH = join(
   FILE_NAME,
 );
 
-/**
- * Read file asynchronously using a promise and parse the data.
- * @param {PathLike | FileHandle =} filePath
- * @returns {Promise<Post[]>}
- */
+// Read file asynchronously and parse the data.
 export async function readFromJSON(
   filePath: PathLike | FileHandle = FILE_PATH,
 ): Promise<Post[]> {
@@ -25,12 +20,7 @@ export async function readFromJSON(
   return JSON.parse(jsonString) as Promise<Post[]>;
 }
 
-/**
- * Serialize the data and write file asynchronously using a promise.
- * @param {Post[]} data
- * @param {PathLike | FileHandle =} filePath
- * @returns {Promise<void>}
- */
+// Serialize write data to file asynchronously.
 export async function writeToJSON(
   data: Post[],
   filePath: PathLike | FileHandle = FILE_PATH,
