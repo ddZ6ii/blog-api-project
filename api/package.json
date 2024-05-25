@@ -8,8 +8,8 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "vite-node --watch index.ts",
-    "dev:start": "concurrently \"vite-node --watch index.ts\" \"vite --host --open\"",
+    "dev": "vite-node -w index.ts",
+    "dev:start": "concurrently \"vite-node -w index.ts\" \"vite --host --open\"",
     "start": "cross-env NODE_ENV=production node ./dist/index.es.js",
     "test": "yarn run reset:dev && vitest --pool=forks --typecheck",
     "build": "yarn run format:lint && npx tsc && vite build && yarn run copy:data",
@@ -21,13 +21,14 @@
     "copy:data": "cp -R ./src/data ./dist/data",
     "reset:dev": "cp ./src/data/initialPosts.json ./src/data/posts.json",
     "reset:prod": "cp ./dist/data/initialPosts.json ./dist/data/posts.json",
-    "tsc:watch": "tsc -w"
+    "tsc:watch": "npx tsc -w"
   },
   "dependencies": {
     "axios": "^1.4.0",
     "chalk": "^5.3.0",
     "dotenv": "^16.4.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
@@ -41,7 +42,6 @@
     "magic-string": "^0.30.10",
     "path": "^0.12.7",
     "prettier": "^3.2.5",
-    "prettier-plugin-ejs": "^1.0.3",
     "rollup-plugin-node-externals": "^7.1.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.10.0",
