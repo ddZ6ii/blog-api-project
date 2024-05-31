@@ -8,7 +8,7 @@ const updatedPostContent: Partial<PostContent> = {
   author: 'Mia Williams',
 };
 
-describe('Partially updated post content by ID', () => {
+describe("Partially updated post content by 'id'", () => {
   // Reset posts prior to testing.
   beforeEach(async () => {
     try {

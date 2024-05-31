@@ -10,7 +10,7 @@ const validPostContent: PostContent = {
     'Pellentesque justo nisl, laoreet ac magna vel, cursus consectetur sem. Vestibulum in sem eu velit volutpat pharetra eu sit amet nunc. Aliquam in interdum lacus Nam facilisis turpis sit amet leo tincidunt auctor. Mauris cursus hendrerit facilisis. Curabitur purus magna, feugiat sed diam id, posuere consectetur ipsum. Nulla luctus lobortis nibh fringilla porta. Sed a ligula ut nibh placerat tincidunt eget et neque. Fusce at nunc tempus est hendrerit maximus. Pellentesque viverra eu mi nec accumsan. Fusce vitae efficitur est id eleifend sapien. In faucibus enim eget leo dignissim facilisis.',
 };
 
-describe('Delete post specified by ID', () => {
+describe("Delete post specified by 'id'", () => {
   // Reset posts prior to testing.
   beforeEach(async () => {
     try {
@@ -33,7 +33,7 @@ describe('Delete post specified by ID', () => {
     await expect(blog.deletePostById(44)).resolves.toBeUndefined();
   });
 
-  it('should return deleted post ID', async () => {
+  it("should return deleted post 'id'", async () => {
     const addedPost = await blog.addPost(validPostContent);
     const deletedPostId = await blog.deletePostById(addedPost.id);
     expect(deletedPostId).toBe(addedPost.id);

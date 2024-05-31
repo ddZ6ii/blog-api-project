@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { blog } from '@store/blog.ts';
 import { Post } from '@/types/post.type.ts';
 
-describe('Retrive post by ID', () => {
+describe("Retrive post by 'id'", () => {
   it('should return undefined if no corresponding post', () => {
     expect(blog.getPostById(9999)).toBeUndefined();
   });
 
-  it('should return post specified by ID', () => {
+  it("should return post specified by 'id'", () => {
     const post: Post = {
       id: 2,
       title: 'The Impact of Artificial Intelligence on Modern Businesses',

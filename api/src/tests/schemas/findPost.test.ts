@@ -7,27 +7,27 @@ describe('FindPostSchema', () => {
     expect(FindPostSchema.safeParse({ params }).success).toBe(false);
   });
 
-  it('should fail if ID cannot be coerced to number', () => {
+  it("should fail if 'id' cannot be coerced to number", () => {
     const params = { id: 'NaN' };
     expect(FindPostSchema.safeParse({ params }).success).toBe(false);
   });
 
-  it('should fail if coerced ID is not an integer', () => {
+  it("should fail if coerced 'id' is not an integer", () => {
     const params = { id: '4.5' };
     expect(FindPostSchema.safeParse({ params }).success).toBe(false);
   });
 
-  it('should fail if coerced ID exceeds', () => {
+  it("should fail if coerced 'id' exceeds", () => {
     const params = { id: '9007199254740992' };
     expect(FindPostSchema.safeParse({ params }).success).toBe(false);
   });
 
-  it('should fail if coerced ID is not strictly positive', () => {
+  it("should fail if coerced 'id' is not strictly positive", () => {
     const params = { id: '0' };
     expect(FindPostSchema.safeParse({ params }).success).toBe(false);
   });
 
-  it('should pass if coerced ID is a strictly positive integer', () => {
+  it("should pass if coerced 'id' is a strictly positive integer", () => {
     const params = { id: '2' };
     expect(FindPostSchema.safeParse({ params }).success).toBe(true);
   });
