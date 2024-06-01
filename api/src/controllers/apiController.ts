@@ -5,8 +5,8 @@ import { FindPostSchema } from '@/types/findPost.schema.ts';
 import { UpdatePostSchema } from '@/types/updatePost.schema.ts';
 import { SearchPostsSchema } from '@/types/searchPost.schema.ts';
 import { CreatePostStrictSchema } from '@/types/createPost.schema.ts';
-import { NotFoundError } from '@/errors/NotFoundError.ts';
-import { ServerError } from '@/errors/ServerError.ts';
+import { NotFoundError } from '@/types/NotFoundError.class.ts';
+import { ServerError } from '@/types/ServerError.class.ts';
 import { isEmpty } from '@/utils/isEmpty.ts';
 
 export const getAllPosts: RequestHandler<unknown, Post[], unknown, Search> = (

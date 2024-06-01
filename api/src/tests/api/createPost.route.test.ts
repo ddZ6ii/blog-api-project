@@ -10,7 +10,7 @@ import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { blog } from '@store/blog.ts';
 import { Post, PostContent } from '@/types/post.type.ts';
-import { CustomErrorContent } from '@/errors/CustomError.ts';
+import { CustomErrorContent } from '@/types/CustomError.class.ts';
 import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('POST request to create a new blog post...', () => {

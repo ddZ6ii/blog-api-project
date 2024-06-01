@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { CustomError } from '@/errors/CustomError.ts';
+import { CustomError } from '@/types/CustomError.class.ts';
 import { ErrorRequestHandler, Response, Request, NextFunction } from 'express';
 
 export const errorHandler: ErrorRequestHandler = (

@@ -16,7 +16,7 @@ import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { blog } from '@store/blog.ts';
 import { PostContent } from '@/types/post.type.ts';
-import { CustomErrorContent } from '@/errors/CustomError.ts';
+import { CustomErrorContent } from '@/types/CustomError.class.ts';
 import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('DELETE request to remove post specified by...', () => {

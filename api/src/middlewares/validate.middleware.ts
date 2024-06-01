@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction, RequestHandler } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
-import { ServerError } from '@/errors/ServerError.ts';
-import { BadRequestError } from '@/errors/BadRequestError.ts';
+import { ServerError } from '@/types/ServerError.class.ts';
+import { BadRequestError } from '@/types/BadRequestError.class.ts';
 
 export const validate =
   (schema: AnyZodObject): RequestHandler =>

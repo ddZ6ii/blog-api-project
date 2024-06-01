@@ -5,7 +5,7 @@ import { blog } from '@store/blog.ts';
 import { readFromJSON } from '@/utils/fileIO.ts';
 import { Post } from '@/types/post.type.ts';
 import { SortSchema } from '@/types/post.schema.ts';
-import { CustomErrorContent } from '@/errors/CustomError.ts';
+import { CustomErrorContent } from '@/types/CustomError.class.ts';
 import { API_BASE_URL, TIMEOUT } from './config.ts';
 
 describe.sequential('GET request for all blog posts...', () => {

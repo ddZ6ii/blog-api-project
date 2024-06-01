@@ -1,4 +1,4 @@
-import { CustomError } from './CustomError.ts';
+import { CustomError } from './CustomError.class.ts';
 
 export class BadRequestError extends CustomError {
   readonly code: number = 400;

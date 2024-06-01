@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { readFromJSON } from '@/utils/fileIO.ts';
 import { Post } from '@/types/post.type.ts';
-import { CustomErrorContent } from '@/errors/CustomError.ts';
+import { CustomErrorContent } from '@/types/CustomError.class.ts';
 import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('GET request for post specified by...', () => {

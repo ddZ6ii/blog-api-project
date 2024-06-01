@@ -1,4 +1,4 @@
-import { CustomError } from './CustomError.ts';
+import { CustomError } from './CustomError.class.ts';
 
 export class ServerError extends CustomError {
   readonly code: number = 500;

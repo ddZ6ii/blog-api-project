@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it, beforeAll } from 'vitest';
 import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
-import { CustomErrorContent } from '@/errors/CustomError.ts';
+import { CustomErrorContent } from '@/types/CustomError.class.ts';
 import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('API routes', () => {
