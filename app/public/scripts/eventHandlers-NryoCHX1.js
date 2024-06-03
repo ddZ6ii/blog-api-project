@@ -1,31 +1,47 @@
-import { DebouncedFn } from '@/types/debounce.type.ts';
-
-export function onLinkClick(evt: MouseEvent) {
+const debounceLead = (cbFn, delayInMs = 1e3) => {
+  let timeoutId;
+  return (evt, ...args) => {
+    if (!timeoutId) {
+      cbFn(evt, ...args);
+    }
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+    }, delayInMs);
+  };
+};
+const debounce = (cbFn, delayInMs = 500) => {
+  let timeoutId;
+  return (evt, ...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      cbFn(evt, ...args);
+    }, delayInMs);
+  };
+};
+function onLinkClick(evt) {
   if (!(evt.target instanceof HTMLAnchorElement)) return;
   if (evt.target.classList.contains('link-disabled')) return;
   location.href = evt.target.href;
 }
-
-export function onContainerClick(
-  evt: MouseEvent,
-  cbFn: DebouncedFn<MouseEvent>,
-) {
+function onContainerClick(evt, cbFn) {
   if (!(evt.target instanceof HTMLAnchorElement)) return;
   evt.preventDefault();
   cbFn(evt);
   addSpinner(evt.target);
   disableUserInteractions();
 }
-
-export function addSpinner(nodeEl: HTMLElement | null) {
+function addSpinner(nodeEl) {
   if (!nodeEl) return;
-
   const isDisabled =
     (nodeEl instanceof HTMLButtonElement && nodeEl.disabled) ||
     (nodeEl instanceof HTMLAnchorElement &&
       nodeEl.classList.contains('link-disabled'));
   if (isDisabled) return;
-
   const spinnerEl = document.createElement('span');
   spinnerEl.classList.add('spinner');
   if (!(nodeEl instanceof HTMLDivElement)) {
@@ -36,13 +52,11 @@ export function addSpinner(nodeEl: HTMLElement | null) {
   }
   nodeEl.prepend(spinnerEl);
 }
-
-export function disableUserInteractions() {
-  const fieldsetEl = document.querySelector<HTMLFieldSetElement>('fieldset');
-  const linkEls = document.querySelectorAll<HTMLAnchorElement>('a');
-  const buttonEls = document.querySelectorAll<HTMLButtonElement>('button');
+function disableUserInteractions() {
+  const fieldsetEl = document.querySelector('fieldset');
+  const linkEls = document.querySelectorAll('a');
+  const buttonEls = document.querySelectorAll('button');
   const nodeEls = [fieldsetEl, ...linkEls, ...buttonEls];
-
   nodeEls.forEach((nodeEl) => {
     if (!nodeEl) return;
     if (
@@ -56,3 +70,11 @@ export function disableUserInteractions() {
     }
   });
 }
+export {
+  addSpinner as a,
+  debounce as b,
+  debounceLead as c,
+  disableUserInteractions as d,
+  onLinkClick as e,
+  onContainerClick as o,
+};

@@ -14,16 +14,18 @@
         <div class="header-actions">
           <a id="newPostBtn" href="/new">New Post</a>
           <form id="searchForm" class="searchForm" method="post" action="/">
-            <input
-              type="text"
-              name="search"
-              id="search"
-              class="search"
-              placeholder="Search posts..."
-              value="<%= locals.filter ?? '' %>"
-              aria-label="Search posts"
-            />
-            <div class="searchForm-icon">
+            <fieldset>
+              <input
+                type="text"
+                name="search"
+                id="search"
+                class="search"
+                placeholder="Search posts..."
+                value="<%= locals.filter ?? '' %>"
+                aria-label="Search posts"
+              />
+            </fieldset>
+            <div id="search-icon" class="searchForm-icon">
               <img
                 src="/assets/icons/search-icon.svg"
                 alt=""
@@ -45,8 +47,10 @@
             >By:
             <%=post.author%>
           </small>
-          <a class="edit" href="/edit/<%= post.id %>">Edit</a>
-          <a class="delete" href="/api/posts/delete/<%= post.id %>">Delete</a>
+          <div class="post-actions">
+            <a class="edit" href="/edit/<%= post.id %>">Edit</a>
+            <a class="delete" href="/api/posts/delete/<%= post.id %>">Delete</a>
+          </div>
         </li>
         <% }); %>
       </ul>
@@ -62,11 +66,5 @@
 
       <% }%>
     </div>
-
-    <dialog>
-      <div class="spinner">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </dialog>
   </body>
 </html>

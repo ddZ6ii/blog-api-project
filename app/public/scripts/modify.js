@@ -1,27 +1,26 @@
-import { d as debounceLead, o as onLinkClick } from "./eventHandlers-DhOmyAxr.js";
-const containerEl = document.querySelector(".container");
-const formEl = document.querySelector("form");
-const submitBtnEl = formEl == null ? void 0 : formEl.querySelector(
-  'button[type="submit"]'
-);
-const dialogEl = document.querySelector("dialog");
+import {
+  a as addSpinner,
+  d as disableUserInteractions,
+  o as onContainerClick,
+  c as debounceLead,
+  e as onLinkClick,
+} from './eventHandlers-NryoCHX1.js';
+const containerEl = document.querySelector('.container');
+const formEl = document.querySelector('form');
 const debouncedOnLinkClick = debounceLead((e) => {
-  onLinkClick(e, dialogEl);
+  onLinkClick(e);
 });
-submitBtnEl == null ? void 0 : submitBtnEl.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (!formEl)
-    return;
-  if (formEl.checkValidity()) {
-    dialogEl == null ? void 0 : dialogEl.setAttribute("open", "");
-  }
-  formEl.requestSubmit();
-});
-containerEl == null ? void 0 : containerEl.addEventListener("click", (e) => {
-  if (!(e.target instanceof HTMLAnchorElement))
-    return;
-  if (e.target.nodeName.toLowerCase() === "a") {
-    e.preventDefault();
-    debouncedOnLinkClick(e);
-  }
-});
+formEl == null
+  ? void 0
+  : formEl.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!formEl.checkValidity()) return;
+      formEl.submit();
+      addSpinner(formEl.querySelector('button[type="submit"]'));
+      disableUserInteractions();
+    });
+containerEl == null
+  ? void 0
+  : containerEl.addEventListener('click', (e) =>
+      onContainerClick(e, debouncedOnLinkClick),
+    );

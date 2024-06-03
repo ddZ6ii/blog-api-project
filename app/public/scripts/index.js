@@ -1,32 +1,57 @@
-import { d as debounceLead, a as debounce, o as onLinkClick } from "./eventHandlers-DhOmyAxr.js";
-const containerEl = document.querySelector(".container");
-const searchFormEl = document.querySelector("#searchForm");
-const searchInputEl = document.querySelector("#search");
-const dialogEl = document.querySelector("dialog");
+import {
+  o as onContainerClick,
+  a as addSpinner,
+  d as disableUserInteractions,
+  b as debounce,
+  c as debounceLead,
+  e as onLinkClick,
+} from './eventHandlers-NryoCHX1.js';
+const containerEl = document.querySelector('.container');
+const searchFormEl = document.querySelector('#searchForm');
+const searchInputEl = document.querySelector('#search');
+const searchIconEl = document.querySelector('#search-icon');
+let previousSearchText = '';
+let isSubmitting = false;
 const debouncedOnLinkClick = debounceLead((e) => {
-  onLinkClick(e, dialogEl);
+  onLinkClick(e);
 });
-const debouncedOnInputChange = debounce(onInputChange);
-window.addEventListener("load", () => {
-  if (!searchInputEl)
-    return;
+const debouncedOnInputChange = debounce(() =>
+  searchFormEl == null ? void 0 : searchFormEl.requestSubmit(),
+);
+window.addEventListener('load', () => {
+  if (!searchInputEl) return;
   searchInputEl.focus();
   if (searchInputEl.value) {
-    const previousValue = searchInputEl.value;
-    searchInputEl.value = "";
-    searchInputEl.value = previousValue;
+    previousSearchText = searchInputEl.value;
+    searchInputEl.value = '';
+    searchInputEl.value = previousSearchText;
   }
-  searchInputEl.addEventListener("keyup", debouncedOnInputChange);
+  isSubmitting = false;
+  searchInputEl.addEventListener('keyup', debouncedOnInputChange);
 });
-containerEl == null ? void 0 : containerEl.addEventListener("click", (e) => {
-  if (!(e.target instanceof HTMLAnchorElement))
-    return;
-  if (e.target.nodeName.toLowerCase() === "a") {
-    e.preventDefault();
-    debouncedOnLinkClick(e);
-  }
-});
-function onInputChange() {
-  dialogEl == null ? void 0 : dialogEl.setAttribute("open", "");
-  searchFormEl == null ? void 0 : searchFormEl.requestSubmit();
-}
+containerEl == null
+  ? void 0
+  : containerEl.addEventListener('click', (e) =>
+      onContainerClick(e, debouncedOnLinkClick),
+    );
+searchFormEl == null
+  ? void 0
+  : searchFormEl.addEventListener('submit', (e) => {
+      var _a;
+      e.preventDefault();
+      if (isSubmitting) return;
+      if (
+        !(searchInputEl == null ? void 0 : searchInputEl.value) &&
+        !previousSearchText
+      )
+        return;
+      searchFormEl.submit();
+      (_a =
+        searchIconEl == null ? void 0 : searchIconEl.querySelector('img')) ==
+      null
+        ? void 0
+        : _a.remove();
+      addSpinner(searchIconEl);
+      disableUserInteractions();
+      isSubmitting = true;
+    });
