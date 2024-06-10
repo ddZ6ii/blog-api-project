@@ -5,7 +5,7 @@ import {
   b as debounce,
   c as debounceLead,
   e as onLinkClick,
-} from './eventHandlers-NryoCHX1.js';
+} from './eventHandlers-Cdev2lJw.js';
 const containerEl = document.querySelector('.container');
 const searchFormEl = document.querySelector('#searchForm');
 const searchInputEl = document.querySelector('#search');
@@ -31,9 +31,9 @@ window.addEventListener('load', () => {
 });
 containerEl == null
   ? void 0
-  : containerEl.addEventListener('click', (e) =>
-      onContainerClick(e, debouncedOnLinkClick),
-    );
+  : containerEl.addEventListener('click', (e) => {
+      onContainerClick(e, debouncedOnLinkClick);
+    });
 searchFormEl == null
   ? void 0
   : searchFormEl.addEventListener('submit', (e) => {

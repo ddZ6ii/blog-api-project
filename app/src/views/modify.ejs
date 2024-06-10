@@ -11,27 +11,49 @@
     <div class="container">
       <h1><%= heading %></h1>
       <form
-        id="postForm"
+        id="<%=locals.post ? 'editForm' : 'postForm' %>"
         method="post"
         action="/api/posts<%=locals.post ? `/${post.id}` : ''%>"
       >
         <fieldset>
+          <label for="title" class="sr-only">Title</label>
           <input
+            id="title"
             type="text"
             name="title"
             placeholder="Title"
             value="<%=locals.post ? post.title : '' %>"
             required
+            minlength="5"
+            maxlength="150"
+            autofocus
           />
-          <textarea name="content" placeholder="Content" required rows="10">
+        </fieldset>
+        <fieldset>
+          <label for="content" class="sr-only">Content</label>
+          <textarea
+            id="content"
+            name="content"
+            placeholder="Content"
+            rows="10"
+            required
+            minlength="5"
+            maxlength="3500"
+          >
 <%=locals.post? post.content : '' %></textarea
           >
+        </fieldset>
+        <fieldset>
+          <label for="author" class="sr-only">Author</label>
           <input
+            id="author"
             type="text"
             name="author"
             placeholder="Author"
             value="<%=locals.post ? post.author : '' %>"
             required
+            minlength="5"
+            maxlength="50"
           />
         </fieldset>
         <div class="post-actions">

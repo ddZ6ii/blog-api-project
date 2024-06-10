@@ -33,7 +33,7 @@ export default defineConfig({
   plugins: [
     // Allow for TS types imports.
     dts({
-      include: ['debounce.type.ts'],
+      include: ['debounce.type.ts', 'form.type.ts', 'post.type.ts'],
     }),
   ],
 });

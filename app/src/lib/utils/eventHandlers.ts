@@ -1,5 +1,10 @@
 import { DebouncedFn } from '@/types/debounce.type.ts';
 
+const fieldsetEls = document.querySelectorAll<HTMLFieldSetElement>('fieldset');
+const linkEls = document.querySelectorAll<HTMLAnchorElement>('a');
+const buttonEls = document.querySelectorAll<HTMLButtonElement>('button');
+const nodeEls = [...fieldsetEls, ...linkEls, ...buttonEls];
+
 export function onLinkClick(evt: MouseEvent) {
   if (!(evt.target instanceof HTMLAnchorElement)) return;
   if (evt.target.classList.contains('link-disabled')) return;
@@ -37,14 +42,14 @@ export function addSpinner(nodeEl: HTMLElement | null) {
   nodeEl.prepend(spinnerEl);
 }
 
-export function disableUserInteractions() {
-  const fieldsetEl = document.querySelector<HTMLFieldSetElement>('fieldset');
-  const linkEls = document.querySelectorAll<HTMLAnchorElement>('a');
-  const buttonEls = document.querySelectorAll<HTMLButtonElement>('button');
-  const nodeEls = [fieldsetEl, ...linkEls, ...buttonEls];
+export function removeSpinner() {
+  const spinnerEl = document.querySelector('.spinner');
+  if (!spinnerEl) return;
+  spinnerEl.remove();
+}
 
+export function disableUserInteractions() {
   nodeEls.forEach((nodeEl) => {
-    if (!nodeEl) return;
     if (
       nodeEl instanceof HTMLFieldSetElement ||
       nodeEl instanceof HTMLButtonElement
@@ -53,6 +58,20 @@ export function disableUserInteractions() {
     }
     if (nodeEl instanceof HTMLAnchorElement) {
       nodeEl.classList.add('link-disabled');
+    }
+  });
+}
+
+export function enableUserInteractions() {
+  nodeEls.forEach((nodeEl) => {
+    if (
+      nodeEl instanceof HTMLFieldSetElement ||
+      nodeEl instanceof HTMLButtonElement
+    ) {
+      nodeEl.disabled = false;
+    }
+    if (nodeEl instanceof HTMLAnchorElement) {
+      nodeEl.classList.remove('link-disabled');
     }
   });
 }

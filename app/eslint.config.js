@@ -42,6 +42,7 @@ export default tseslint.config(
       ],
       // Enforce type definition to consistently use type (instead of interface which is default).
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/no-dynamic-delete': 'warn',
     },
   },
   // Config object to globally exclude listed files from linting.

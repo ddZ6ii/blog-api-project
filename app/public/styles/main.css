@@ -51,6 +51,15 @@ img {
   display: block;
 }
 
+/* Remove element's intrinsic gap below. */
+textarea {
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
 body {
   min-height: 100dvh;
   background-color: var(--neutral-color-50);
@@ -71,13 +80,23 @@ h2 {
 }
 
 p,
-input,
-textarea {
+fieldset {
   margin-bottom: 20px;
 }
 
 p {
   margin-top: 20px;
+}
+
+fieldset {
+  &:has(input.has-error, textArea.has-error) li {
+    padding-block: 0;
+    padding-top: 4px;
+    border: none;
+    color: var(--danger-color);
+    font-size: 0.8em;
+    line-height: 1.2;
+  }
 }
 
 input,
@@ -92,6 +111,16 @@ textarea {
 
   &:focus {
     outline: 1px solid var(--primary-color);
+  }
+  &.has-error {
+    padding-right: 32px;
+    border-color: #e74c3c;
+    border-width: 1px;
+
+    &:focus-visible {
+      border-left-width: 4px;
+      outline: 1px solid #e74c3c;
+    }
   }
 }
 
@@ -225,6 +254,9 @@ a {
   position: relative;
   max-width: 400px;
   flex-grow: 1;
+  & fieldset {
+    margin-bottom: 0;
+  }
 }
 
 .searchForm-icon {
@@ -334,6 +366,29 @@ a {
 
 .link-disabled {
   pointer-events: none;
+}
+
+.toastify {
+  position: absolute;
+  right: 5%;
+  padding-left: 20px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  background: none !important;
+  background-color: var(--neutral-color-600) !important;
+  border-radius: 6px;
+  color: var(--neutral-color-50);
+  z-index: 2;
+
+  & .toast-close {
+    position: relative;
+    top: -5px;
+    left: 5px;
+    background-color: transparent;
+    height: fit-content;
+    font-size: 0.8em;
+  }
 }
 
 .sr-only {

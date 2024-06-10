@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import chalk from 'chalk';
-import { Filter, Post, PostContent, PostIdParam } from '@/types/posts.type.ts';
+import { Filter, Post, PostContent, PostIdParam } from '@/types/post.type.ts';
 import { CustomErrorContent } from '@/types/error.type.ts';
 
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';

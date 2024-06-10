@@ -23,6 +23,10 @@ const debounce = (cbFn, delayInMs = 500) => {
     }, delayInMs);
   };
 };
+const fieldsetEls = document.querySelectorAll('fieldset');
+const linkEls = document.querySelectorAll('a');
+const buttonEls = document.querySelectorAll('button');
+const nodeEls = [...fieldsetEls, ...linkEls, ...buttonEls];
 function onLinkClick(evt) {
   if (!(evt.target instanceof HTMLAnchorElement)) return;
   if (evt.target.classList.contains('link-disabled')) return;
@@ -52,13 +56,13 @@ function addSpinner(nodeEl) {
   }
   nodeEl.prepend(spinnerEl);
 }
+function removeSpinner() {
+  const spinnerEl = document.querySelector('.spinner');
+  if (!spinnerEl) return;
+  spinnerEl.remove();
+}
 function disableUserInteractions() {
-  const fieldsetEl = document.querySelector('fieldset');
-  const linkEls = document.querySelectorAll('a');
-  const buttonEls = document.querySelectorAll('button');
-  const nodeEls = [fieldsetEl, ...linkEls, ...buttonEls];
   nodeEls.forEach((nodeEl) => {
-    if (!nodeEl) return;
     if (
       nodeEl instanceof HTMLFieldSetElement ||
       nodeEl instanceof HTMLButtonElement
@@ -70,11 +74,26 @@ function disableUserInteractions() {
     }
   });
 }
+function enableUserInteractions() {
+  nodeEls.forEach((nodeEl) => {
+    if (
+      nodeEl instanceof HTMLFieldSetElement ||
+      nodeEl instanceof HTMLButtonElement
+    ) {
+      nodeEl.disabled = false;
+    }
+    if (nodeEl instanceof HTMLAnchorElement) {
+      nodeEl.classList.remove('link-disabled');
+    }
+  });
+}
 export {
   addSpinner as a,
   debounce as b,
   debounceLead as c,
   disableUserInteractions as d,
   onLinkClick as e,
+  enableUserInteractions as f,
   onContainerClick as o,
+  removeSpinner as r,
 };
