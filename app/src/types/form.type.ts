@@ -1,5 +1,5 @@
 import { typeToFlattenedError } from 'zod';
-import { ObjectValues } from './util.type.ts';
+import { ObjectValues } from './utils.type.ts';
 
 const FORM_STATUS = {
   typing: 'TYPING',

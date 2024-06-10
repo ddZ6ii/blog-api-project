@@ -1,7 +1,7 @@
 import express from 'express';
 import * as appController from '@controllers/appController.ts';
 
-const appRouter = express.Router();
+export const appRouter = express.Router();
 
 // Render main page.
 appRouter.get('/', appController.renderAllPosts);
@@ -29,5 +29,3 @@ appRouter.get('/api/posts/reset', appController.resetPosts);
 
 // Handle invalid URLs for all HTTP methods.
 appRouter.all('*', appController.renderNotFound);
-
-export default appRouter;

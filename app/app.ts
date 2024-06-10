@@ -4,7 +4,8 @@ import express from 'express';
 import 'dotenv/config';
 import chalk from 'chalk';
 import { join } from 'path';
-import appRouter from '@/routers/app.router.ts';
+import { appRouter } from '@routers/app.router.ts';
+import { errorHandler } from '@middlewares/error.middleware.ts';
 
 const { DEV } = import.meta.env;
 const SERVER_PORT = parseInt(process.env.SERVER_APP_PORT ?? '8000', 10);
@@ -22,6 +23,11 @@ app.use(express.static(join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/', appRouter);
+/**
+ * Custom error-handling middleware (must be defined after all the routes!).
+ * Any error thrown from a route or another middleware will be caught by the 'errorHandler'.
+ */
+app.use(errorHandler);
 
 // Application server.
 const _server = app.listen(SERVER_PORT, (): void => {

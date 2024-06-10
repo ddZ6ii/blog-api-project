@@ -46,7 +46,9 @@ export default defineConfig({
       '@': resolve(join(__dirname, 'src')),
       '@controllers': resolve(join(__dirname, 'src', 'controllers')),
       '@lib': resolve(join(__dirname, 'src', 'lib')),
+      '@middlewares': resolve(join(__dirname, 'src', 'middlewares')),
       '@routers': resolve(join(__dirname, 'src', 'routers')),
+      '@utils': resolve(join(__dirname, 'src', 'utils')),
     },
   },
   server: {

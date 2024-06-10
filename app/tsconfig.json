@@ -18,7 +18,9 @@
       "@/*": ["src/*"],
       "@controllers/*": ["src/controllers/*"],
       "@lib/*": ["src/lib/*"],
-      "@routers/*": ["src/routers/*"]
+      "@middlewares/*": ["src/middlewares/*"],
+      "@routers/*": ["src/routers/*"],
+      "@utils/*": ["src/utils/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     "allowImportingTsExtensions": true /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */,
     "resolveJsonModule": true /* Enable importing .json files. */,
