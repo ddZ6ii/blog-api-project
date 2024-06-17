@@ -30,7 +30,7 @@ app.use('/', appRouter);
 app.use(errorHandler);
 
 // Application server.
-const _server = app.listen(SERVER_PORT, (): void => {
+const _server = app.listen(SERVER_PORT, () => {
   console.info(
     chalk.yellow(
       `Backend server is running on ${DEV ? 'http://localhost' : SERVER_URL}:${SERVER_PORT.toString()}...`,

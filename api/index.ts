@@ -7,7 +7,7 @@ import { blog } from '@store/blog.ts';
 import { apiRouter } from '@/routers/api.router.ts';
 import { errorHandler } from '@/middlewares/error.middleware.ts';
 
-const API_PORT = parseInt(process.env.API_PORT ?? '3000', 10);
+const API_PORT = parseInt(process.env.PORT ?? '3000', 10);
 const API_BASE_URL = `http://${process.env.API_PRIVATE_DOMAIN ?? 'localhost'}`;
 const API_URL = `${API_BASE_URL}:${API_PORT.toString()}`;
 const app = express();
@@ -28,7 +28,7 @@ app.use('/', apiRouter);
 app.use(errorHandler);
 
 // API server.
-const _server = app.listen(API_PORT, '::', (): void => {
+const _server = app.listen(API_PORT, '::', () => {
   console.info(chalk.yellow(`API is running on ${API_URL}...`));
 });
 
