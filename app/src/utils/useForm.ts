@@ -1,7 +1,7 @@
 import { FieldError, FormError, FormState } from '@/types/form.type.ts';
 import { SafeParseReturnType, Schema, ZodError } from 'zod';
 import { objectKeys } from './object.ts';
-import { isFieldElement, isSchemaZodObject } from './typeGuards.ts';
+import { isFieldElement, isSchemaZodObject } from '@utils/typeGuards.ts';
 
 export function useForm<TData, TResponse>(
   formEl: HTMLFormElement,

@@ -1,19 +1,16 @@
 {
-  "name": "blog-api-project",
+  "name": "app",
   "private": true,
   "version": "1.0.0",
-  "description": "Blog backend application",
-  "author": "Denis Dezest <denis.dezest@gmail.com>",
-  "repository": "git@github.com:ddZ6ii/blog-api-project.git",
-  "license": "ISC",
+  "description": "backend application",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"sleep 1 && yarn run client\" \"yarn run server\"",
     "server": "vite-node -w app.ts",
     "client": "vite --host --open",
-    "build": "yarn run format:lint && npx tsc && vite build && yarn run build:lib && yarn run minify:public && yarn run copy:views && yarn run copy:assets",
-    "build:lib": "npx tsc && vite build --config ./src/lib/vite.lib.config.ts",
-    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/app.es.js\" \"vite preview --host --open\"",
+    "build": "yarn run format:lint && npx tsc && vite build && yarn run build:scripts && yarn run minify:public && yarn run copy:views && yarn run copy:assets",
+    "build:scripts": "npx tsc && vite build --config ./src/scripts/vite.lib.config.ts",
+    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/app.js\" \"vite preview --host --open\"",
     "build:preview": "yarn run build && yarn run preview",
     "format": "prettier --plugin=prettier-plugin-ejs --write .",
     "lint": "eslint --fix .",
@@ -24,7 +21,7 @@
     "copy:views": "cp -R ./src/views ./dist/views",
     "copy:assets": "cp -R ./public/assets ./dist/public/assets",
     "tsc:watch": "npx tsc -w",
-    "start": "cross-env NODE_ENV=production node ./dist/app.es.js"
+    "start": "cross-env NODE_ENV=production node ./dist/app.js"
   },
   "dependencies": {
     "axios": "^1.4.0",

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { capitalize, countWords, pluralize } from '@lib/utils/format.ts';
+import { capitalize, countWords, pluralize } from '@utils/format.ts';
 
 const POST_RESTRICTIONS = {
   titleChars: {

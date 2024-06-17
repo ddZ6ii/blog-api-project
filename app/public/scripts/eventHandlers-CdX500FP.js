@@ -23,13 +23,13 @@ const debounce = (cbFn, delayInMs = 500) => {
     }, delayInMs);
   };
 };
-const fieldsetEls = document.querySelectorAll('fieldset');
-const linkEls = document.querySelectorAll('a');
-const buttonEls = document.querySelectorAll('button');
+const fieldsetEls = document.querySelectorAll("fieldset");
+const linkEls = document.querySelectorAll("a");
+const buttonEls = document.querySelectorAll("button");
 const nodeEls = [...fieldsetEls, ...linkEls, ...buttonEls];
 function onLinkClick(evt) {
   if (!(evt.target instanceof HTMLAnchorElement)) return;
-  if (evt.target.classList.contains('link-disabled')) return;
+  if (evt.target.classList.contains("link-disabled")) return;
   location.href = evt.target.href;
 }
 function onContainerClick(evt, cbFn) {
@@ -41,49 +41,40 @@ function onContainerClick(evt, cbFn) {
 }
 function addSpinner(nodeEl) {
   if (!nodeEl) return;
-  const isDisabled =
-    (nodeEl instanceof HTMLButtonElement && nodeEl.disabled) ||
-    (nodeEl instanceof HTMLAnchorElement &&
-      nodeEl.classList.contains('link-disabled'));
+  const isDisabled = nodeEl instanceof HTMLButtonElement && nodeEl.disabled || nodeEl instanceof HTMLAnchorElement && nodeEl.classList.contains("link-disabled");
   if (isDisabled) return;
-  const spinnerEl = document.createElement('span');
-  spinnerEl.classList.add('spinner');
+  const spinnerEl = document.createElement("span");
+  spinnerEl.classList.add("spinner");
   if (!(nodeEl instanceof HTMLDivElement)) {
-    nodeEl.style.gap = '10px';
+    nodeEl.style.gap = "10px";
   }
-  if (nodeEl.classList.contains('outline')) {
-    spinnerEl.classList.add('spinner-outline');
+  if (nodeEl.classList.contains("outline")) {
+    spinnerEl.classList.add("spinner-outline");
   }
   nodeEl.prepend(spinnerEl);
 }
 function removeSpinner() {
-  const spinnerEl = document.querySelector('.spinner');
+  const spinnerEl = document.querySelector(".spinner");
   if (!spinnerEl) return;
   spinnerEl.remove();
 }
 function disableUserInteractions() {
   nodeEls.forEach((nodeEl) => {
-    if (
-      nodeEl instanceof HTMLFieldSetElement ||
-      nodeEl instanceof HTMLButtonElement
-    ) {
+    if (nodeEl instanceof HTMLFieldSetElement || nodeEl instanceof HTMLButtonElement) {
       nodeEl.disabled = true;
     }
     if (nodeEl instanceof HTMLAnchorElement) {
-      nodeEl.classList.add('link-disabled');
+      nodeEl.classList.add("link-disabled");
     }
   });
 }
 function enableUserInteractions() {
   nodeEls.forEach((nodeEl) => {
-    if (
-      nodeEl instanceof HTMLFieldSetElement ||
-      nodeEl instanceof HTMLButtonElement
-    ) {
+    if (nodeEl instanceof HTMLFieldSetElement || nodeEl instanceof HTMLButtonElement) {
       nodeEl.disabled = false;
     }
     if (nodeEl instanceof HTMLAnchorElement) {
-      nodeEl.classList.remove('link-disabled');
+      nodeEl.classList.remove("link-disabled");
     }
   });
 }
@@ -95,5 +86,5 @@ export {
   onLinkClick as e,
   enableUserInteractions as f,
   onContainerClick as o,
-  removeSpinner as r,
+  removeSpinner as r
 };

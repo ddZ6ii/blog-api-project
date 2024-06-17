@@ -1,6 +1,6 @@
 import Toastify, { Options } from 'toastify-js';
-import { createPostSchema } from '@lib/schemas/post.schema.ts';
-import { debounceLead } from '@lib/utils/debounce.ts';
+import { createPostSchema } from '@schemas/post.schema.ts';
+import { debounceLead } from '@utils/debounce.ts';
 import {
   addSpinner,
   disableUserInteractions,
@@ -8,10 +8,10 @@ import {
   onContainerClick,
   onLinkClick,
   removeSpinner,
-} from '@lib/utils/eventHandlers.ts';
-import { useForm } from './utils/useForm.ts';
-import { isFieldElement } from './utils/typeGuards.ts';
-import { objectKeys } from './utils/object.ts';
+} from '@utils/eventHandlers.ts';
+import { useForm } from '@utils/useForm.ts';
+import { isFieldElement } from '@utils/typeGuards.ts';
+import { objectKeys } from '@utils/object.ts';
 
 const containerEl = document.querySelector<HTMLDivElement>('.container');
 const formEl = document.querySelector<HTMLFormElement>('form');

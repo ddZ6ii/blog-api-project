@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import dts from 'vite-plugin-dts';
 
 export default defineConfig({
@@ -27,7 +27,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@lib': resolve(__dirname),
+      '@schemas': resolve(join(__dirname, '..', 'schemas')),
+      '@utils': resolve(join(__dirname, '..', 'utils')),
     },
   },
   plugins: [

@@ -45,9 +45,9 @@ export default defineConfig({
     alias: {
       '@': resolve(join(__dirname, 'src')),
       '@controllers': resolve(join(__dirname, 'src', 'controllers')),
-      '@lib': resolve(join(__dirname, 'src', 'lib')),
       '@middlewares': resolve(join(__dirname, 'src', 'middlewares')),
       '@routers': resolve(join(__dirname, 'src', 'routers')),
+      '@schemas': resolve(join(__dirname, 'src', 'schemas')),
       '@utils': resolve(join(__dirname, 'src', 'utils')),
     },
   },

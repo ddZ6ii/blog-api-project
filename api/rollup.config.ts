@@ -55,8 +55,12 @@ function config(options?: { entry?: string }): Plugin {
           lib: {
             entry: path.resolve(entry),
             formats: ['es'],
-            fileName: (format) =>
-              `${path.basename(entry, path.extname(entry))}.${format}.js`,
+            fileName: (name, format) => {
+              if (name === 'es') {
+                return `${format}.js`;
+              }
+              return `${format}.${name}`;
+            },
           },
           rollupOptions: {
             external: ['dependencies-to-exclude'],
