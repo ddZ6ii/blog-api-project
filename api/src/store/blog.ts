@@ -51,7 +51,7 @@ class Blog {
   sortPostsByDate(posts = this._posts, sort: SortEnum = SortSchema.enum.DESC) {
     const clonedPosts = structuredClone(posts);
     const isDescendingOrder = sort === SortSchema.enum.DESC;
-    return clonedPosts.toSorted((post1, post2) =>
+    return [...clonedPosts].sort((post1, post2) =>
       isDescendingOrder
         ? toTimeStamp(post2.date) - toTimeStamp(post1.date)
         : toTimeStamp(post1.date) - toTimeStamp(post2.date),
