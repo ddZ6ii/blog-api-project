@@ -14,7 +14,7 @@ import { blog } from '@/store/blog.ts';
 import { readFromJSON } from '@/utils/fileIO.ts';
 import { Post, PostContent } from '@/types/post.type.ts';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
+import { API_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential(
   'PATCH request to partially update post specified by...',
@@ -55,7 +55,7 @@ describe.sequential(
       beforeAll(async () => {
         try {
           response = await axios.patch(
-            `${API_BASE_URL}/posts/${postId}`,
+            `${API_URL}/posts/${postId}`,
             UPDATED_POST_CONTENT,
             {
               ...OPTIONS,
@@ -103,7 +103,7 @@ describe.sequential(
       beforeAll(async () => {
         try {
           response = await axios.patch(
-            `${API_BASE_URL}/posts/${postId}`,
+            `${API_URL}/posts/${postId}`,
             UPDATED_POST_CONTENT,
             {
               ...OPTIONS,
@@ -155,7 +155,7 @@ describe.sequential(
         beforeAll(async () => {
           try {
             // Add temporary post to work on the update.
-            await axios.post(`${API_BASE_URL}/posts`, VALID_POST_CONTENT, {
+            await axios.post(`${API_URL}/posts`, VALID_POST_CONTENT, {
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
               },
@@ -169,7 +169,7 @@ describe.sequential(
               throw new Error("'id' is undefined");
             }
             response = await axios.patch(
-              `${API_BASE_URL}/posts/${postId.toString()}`,
+              `${API_URL}/posts/${postId.toString()}`,
               {},
               {
                 ...OPTIONS,
@@ -188,7 +188,7 @@ describe.sequential(
 
         afterAll(async () => {
           try {
-            await axios.delete(`${API_BASE_URL}/posts/${postId.toString()}`);
+            await axios.delete(`${API_URL}/posts/${postId.toString()}`);
           } catch (err) {
             console.error('Failed to reset posts!', err);
           }
@@ -222,7 +222,7 @@ describe.sequential(
       beforeAll(async () => {
         try {
           // Add temporary post to work on the update.
-          await axios.post(`${API_BASE_URL}/posts`, VALID_POST_CONTENT, {
+          await axios.post(`${API_URL}/posts`, VALID_POST_CONTENT, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
             },
@@ -238,7 +238,7 @@ describe.sequential(
           }
 
           response = await axios.patch(
-            `${API_BASE_URL}/posts/${postId.toString()}`,
+            `${API_URL}/posts/${postId.toString()}`,
             UPDATED_POST_CONTENT,
             {
               headers: {
@@ -256,7 +256,7 @@ describe.sequential(
 
       afterAll(async () => {
         try {
-          await axios.delete(`${API_BASE_URL}/posts/${postId.toString()}`);
+          await axios.delete(`${API_URL}/posts/${postId.toString()}`);
         } catch (err) {
           console.error('Failed to reset posts!', err);
         }

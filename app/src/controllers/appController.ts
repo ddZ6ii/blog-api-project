@@ -4,9 +4,10 @@ import { Filter, Post, PostContent, PostIdParam } from '@/types/post.type.ts';
 import { isErrorResponse } from '@utils/typeGuards.ts';
 import { AxiosCustom } from '@/types/axios.type.ts';
 
-const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
 const API_PORT = parseInt(process.env.API_PORT ?? '3000', 10);
-const API_URL = `${SERVER_URL}:${API_PORT.toString()}`;
+const API_BASE_URL = `http://${process.env.API_PRIVATE_DOMAIN ?? 'localhost'}`;
+const API_URL = `${API_BASE_URL}:${API_PORT.toString()}`;
+
 const OPTIONS: AxiosRequestConfig = {
   validateStatus: (status) => status < 500,
 };

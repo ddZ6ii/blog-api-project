@@ -7,9 +7,9 @@ import { blog } from '@store/blog.ts';
 import { apiRouter } from '@/routers/api.router.ts';
 import { errorHandler } from '@/middlewares/error.middleware.ts';
 
-const { DEV } = import.meta.env;
 const API_PORT = parseInt(process.env.API_PORT ?? '3000', 10);
-const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
+const API_BASE_URL = `http://${process.env.API_PRIVATE_DOMAIN ?? 'localhost'}`;
+const API_URL = `${API_BASE_URL}:${API_PORT.toString()}`;
 const app = express();
 
 // Initialize in-memory data store from JSON file.
@@ -29,11 +29,7 @@ app.use(errorHandler);
 
 // API server.
 const _server = app.listen(API_PORT, '::', (): void => {
-  console.info(
-    chalk.yellow(
-      `API is running on ${DEV ? 'http://localhost' : SERVER_URL}:${API_PORT.toString()}...`,
-    ),
-  );
+  console.info(chalk.yellow(`API is running on ${API_URL}...`));
 });
 
 // Fix: Properly close existing erver prior to HMR (source: https://github.com/vitest-dev/vitest/issues/2334)
