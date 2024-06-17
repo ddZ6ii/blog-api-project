@@ -1,10 +1,10 @@
-import { debounce, debounceLead } from '@lib/utils/debounce.ts';
+import { debounce, debounceLead } from '@utils/debounce.ts';
 import {
   addSpinner,
   disableUserInteractions,
   onContainerClick,
   onLinkClick,
-} from '@lib/utils/eventHandlers.ts';
+} from '@utils/eventHandlers.ts';
 
 const containerEl = document.querySelector<HTMLDivElement>('.container');
 const searchFormEl = document.querySelector<HTMLFormElement>('#searchForm');

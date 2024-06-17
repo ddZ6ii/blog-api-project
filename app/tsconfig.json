@@ -17,9 +17,9 @@
     "paths": {
       "@/*": ["src/*"],
       "@controllers/*": ["src/controllers/*"],
-      "@lib/*": ["src/lib/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@routers/*": ["src/routers/*"],
+      "@schemas/*": ["src/schemas/*"],
       "@utils/*": ["src/utils/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     "allowImportingTsExtensions": true /* Allow imports to include TypeScript file extensions. Requires '--moduleResolution bundler' and either '--noEmit' or '--emitDeclarationOnly' to be set. */,

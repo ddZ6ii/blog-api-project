@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { postContentSchema, postSchema } from '@lib/schemas/post.schema.ts';
+import { postContentSchema, postSchema } from '@schemas/post.schema.ts';
 
 export type Filter = {
   search: string;
