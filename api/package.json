@@ -10,10 +10,10 @@
   "scripts": {
     "dev": "vite-node -w index.ts",
     "dev:start": "concurrently \"vite-node -w index.ts\" \"vite --host --open\"",
-    "start": "cross-env NODE_ENV=production node ./dist/index.es.js",
+    "start": "cross-env NODE_ENV=production node ./dist/index.js",
     "test": "yarn run reset:dev && vitest --pool=forks --typecheck",
     "build": "yarn run format:lint && npx tsc && vite build && yarn run copy:data",
-    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/index.es.js\" \"vite preview --host --open\"",
+    "preview": "concurrently \"cross-env NODE_ENV=production node ./dist/index.js\" \"vite preview --host --open\"",
     "build:preview": "yarn run build && yarn run preview",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
