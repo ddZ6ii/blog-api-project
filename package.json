@@ -16,14 +16,19 @@
   ],
   "type": "module",
   "private": true,
-  "workspaces": [
-    "api",
-    "app"
-  ],
   "scripts": {
-    "dev": "concurrently \"yarn workspace api dev\" \"yarn workspace app dev\"",
-    "build": "concurrently \"yarn workspace api build\" \"yarn workspace app build\"",
-    "start": "concurrently \"yarn workspace api start\" \"yarn workspace app start\""
+    "install": "concurrently \"yarn run install:api\" \"yarn run install:app\"",
+    "dev": "concurrently \"yarn run dev:api\" \"yarn run dev:app\"",
+    "build": "concurrently \"yarn run build:api\" \"yarn run build:app\"",
+    "install:api": "cross-env-shell \"cd ./api/ && yarn install\"",
+    "install:app": "cross-env-shell \"cd ./app/ && yarn install\"",
+    "dev:api": "cross-env-shell \"cd ./api/ && yarn run dev\"",
+    "dev:app": "cross-env-shell \"cd ./app/ && yarn run dev\"",
+    "start:app": "cross-env-shell \"cd ./app/ && yarn run start\"",
+    "build:api": "cross-env-shell \"cd ./api/ && yarn run build\"",
+    "build:app": "cross-env-shell \"cd ./app/ && yarn run build\"",
+    "start": "concurrently \"yarn run start:api\" \"yarn run start:app\"",
+    "start:api": "cross-env-shell \"cd ./api/ && yarn run start\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

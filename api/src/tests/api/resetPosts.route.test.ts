@@ -3,14 +3,14 @@ import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { Post } from '@/types/post.type.ts';
 import INITIAL_POSTS from '@data/initialPosts.json';
-import { API_BASE_URL, TIMEOUT } from './config.ts';
+import { API_URL, TIMEOUT } from './config.ts';
 
 describe.sequential('POST request to reset blog posts', () => {
   let response: AxiosResponse<Post[]>;
 
   beforeAll(async () => {
     try {
-      response = await axios.post(`${API_BASE_URL}/posts/reset`);
+      response = await axios.post(`${API_URL}/posts/reset`);
     } catch (err) {
       console.error('Failed request to reset posts!', err);
     }

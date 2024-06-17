@@ -2,7 +2,7 @@ import { describe, expect, expectTypeOf, it, beforeAll } from 'vitest';
 import axios, { AxiosResponse } from 'axios';
 import 'dotenv/config';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
+import { API_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('API routes', () => {
   describe.sequential("GET request to undefined API's endpoint", () => {
@@ -11,7 +11,7 @@ describe.sequential('API routes', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.get(`${API_BASE_URL}/invalid`, OPTIONS);
+        response = await axios.get(`${API_URL}/invalid`, OPTIONS);
         if (response.status !== 200) {
           errorContent = response.data as CustomErrorContent;
         }

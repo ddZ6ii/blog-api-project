@@ -11,9 +11,9 @@ if (opsys === 'win32') process.env.BROWSER = 'chrome';
 if (opsys === 'darwin') process.env.BROWSER = '/Applications/Google Chrome.app';
 
 const DEV = process.env.NODE_ENV === 'development';
-const SERVER_PORT = process.env.SERVER_APP_PORT ?? '3000';
+const SERVER_PORT = process.env.PORT ?? '8000';
 const CLIENT_PORT = parseInt(process.env.CLIENT_APP_PORT ?? '5173', 10);
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';
+const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
 
 export default defineConfig({
   root: resolve(__dirname, './'),
@@ -36,7 +36,7 @@ export default defineConfig({
     // Use a proxy to redirect vite client server to the backend server (cannot use the same port).
     proxy: {
       '/': {
-        target: `${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT}`,
+        target: `${DEV ? 'http://localhost' : SERVER_URL}:${SERVER_PORT}`,
         changeOrigin: true,
       },
     },
@@ -57,7 +57,7 @@ export default defineConfig({
     open: true,
     // Use a proxy to redirect vite client server to the backend server (cannot use the same port).
     proxy: {
-      '/': `${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT}`,
+      '/': `${DEV ? 'http://localhost' : SERVER_URL}:${SERVER_PORT}`,
     },
   },
   // (source: https://dev.to/rxliuli/developing-and-building-nodejs-applications-with-vite-311n)

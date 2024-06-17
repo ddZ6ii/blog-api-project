@@ -6,7 +6,7 @@ import { readFromJSON } from '@/utils/fileIO.ts';
 import { Post } from '@/types/post.type.ts';
 import { SortSchema } from '@/types/post.schema.ts';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, TIMEOUT } from './config.ts';
+import { API_URL, TIMEOUT } from './config.ts';
 
 describe.sequential('GET request for all blog posts...', () => {
   describe.sequential("...sorted in 'DESC' order by default)", () => {
@@ -16,7 +16,7 @@ describe.sequential('GET request for all blog posts...', () => {
     beforeAll(async () => {
       try {
         posts = await readFromJSON();
-        response = await axios.get(`${API_BASE_URL}/posts`);
+        response = await axios.get(`${API_URL}/posts`);
       } catch (err) {
         console.error('Failed to fetch posts!', err);
       }
@@ -51,7 +51,7 @@ describe.sequential('GET request for all blog posts...', () => {
     beforeAll(async () => {
       try {
         posts = await readFromJSON();
-        response = await axios.get(`${API_BASE_URL}/posts?sort=ASC`);
+        response = await axios.get(`${API_URL}/posts?sort=ASC`);
       } catch (err) {
         console.error('Failed to fetch posts sorted in ASC order!', err);
       }
@@ -86,7 +86,7 @@ describe.sequential('GET request for all blog posts...', () => {
     beforeAll(async () => {
       try {
         posts = await readFromJSON();
-        response = await axios.get(`${API_BASE_URL}/posts?filter=thompson`);
+        response = await axios.get(`${API_URL}/posts?filter=thompson`);
       } catch (err) {
         console.error('Failed to search matching posts!', err);
       }
@@ -119,7 +119,7 @@ describe.sequential('GET request for all blog posts...', () => {
 
     beforeAll(async () => {
       try {
-        await axios.get(`${API_BASE_URL}/posts?sort=invalid`);
+        await axios.get(`${API_URL}/posts?sort=invalid`);
       } catch (err: unknown) {
         if (err instanceof AxiosError) {
           errorResponse = err.response;
@@ -163,7 +163,7 @@ describe.sequential('GET request for all blog posts...', () => {
 
     beforeAll(async () => {
       try {
-        await axios.get(`${API_BASE_URL}/posts?any=unexpected`);
+        await axios.get(`${API_URL}/posts?any=unexpected`);
       } catch (err: unknown) {
         if (err instanceof AxiosError) {
           errorResponse = err.response;

@@ -17,7 +17,7 @@ import 'dotenv/config';
 import { blog } from '@store/blog.ts';
 import { PostContent } from '@/types/post.type.ts';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
+import { API_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('DELETE request to remove post specified by...', () => {
   describe.sequential("...invalid 'id'", () => {
@@ -27,10 +27,7 @@ describe.sequential('DELETE request to remove post specified by...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.delete(
-          `${API_BASE_URL}/posts/${postId}`,
-          OPTIONS,
-        );
+        response = await axios.delete(`${API_URL}/posts/${postId}`, OPTIONS);
         if (response.status !== 200) {
           errorContent = response.data as CustomErrorContent;
         }
@@ -69,10 +66,7 @@ describe.sequential('DELETE request to remove post specified by...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.delete(
-          `${API_BASE_URL}/posts/${postId}`,
-          OPTIONS,
-        );
+        response = await axios.delete(`${API_URL}/posts/${postId}`, OPTIONS);
         if (response.status !== 200) {
           errorContent = response.data as CustomErrorContent;
         }
@@ -117,12 +111,12 @@ describe.sequential('DELETE request to remove post specified by...', () => {
     beforeAll(async () => {
       try {
         await blog.resetPosts();
-        await axios.post(`${API_BASE_URL}/posts`, newPost, {
+        await axios.post(`${API_URL}/posts`, newPost, {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
-        response = await axios.delete(`${API_BASE_URL}/posts/${postId}`);
+        response = await axios.delete(`${API_URL}/posts/${postId}`);
       } catch (err) {
         console.error(`Failed to delete post with 'id' ${postId}!`, err);
       }

@@ -4,7 +4,7 @@ import 'dotenv/config';
 import { readFromJSON } from '@/utils/fileIO.ts';
 import { Post } from '@/types/post.type.ts';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
+import { API_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('GET request for post specified by...', () => {
   describe.sequential("...invalid 'id'", () => {
@@ -14,7 +14,7 @@ describe.sequential('GET request for post specified by...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.get(`${API_BASE_URL}/posts/${postId}`, OPTIONS);
+        response = await axios.get(`${API_URL}/posts/${postId}`, OPTIONS);
         if (response.status !== 200) {
           errorContent = response.data as CustomErrorContent;
         }
@@ -53,7 +53,7 @@ describe.sequential('GET request for post specified by...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.get(`${API_BASE_URL}/posts/${postId}`, OPTIONS);
+        response = await axios.get(`${API_URL}/posts/${postId}`, OPTIONS);
         if (response.status !== 200) {
           errorContent = response.data as CustomErrorContent;
         }
@@ -93,7 +93,7 @@ describe.sequential('GET request for post specified by...', () => {
     beforeAll(async () => {
       try {
         posts = await readFromJSON();
-        response = await axios.get(`${API_BASE_URL}/posts/${postId}`);
+        response = await axios.get(`${API_URL}/posts/${postId}`);
       } catch (err) {
         console.error(`Failed to fetch post with 'id' ${postId}!`, err);
       }

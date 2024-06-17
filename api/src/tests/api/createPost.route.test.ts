@@ -11,7 +11,7 @@ import 'dotenv/config';
 import { blog } from '@store/blog.ts';
 import { Post, PostContent } from '@/types/post.type.ts';
 import { CustomErrorContent } from '@/types/CustomError.class.ts';
-import { API_BASE_URL, OPTIONS, TIMEOUT } from './config.ts';
+import { API_URL, OPTIONS, TIMEOUT } from './config.ts';
 
 describe.sequential('POST request to create a new blog post...', () => {
   const VALID_POST_CONTENT: PostContent = {
@@ -28,7 +28,7 @@ describe.sequential('POST request to create a new blog post...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.post(`${API_BASE_URL}/posts`, postContent, {
+        response = await axios.post(`${API_URL}/posts`, postContent, {
           ...OPTIONS,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -70,15 +70,11 @@ describe.sequential('POST request to create a new blog post...', () => {
 
     beforeAll(async () => {
       try {
-        response = await axios.post(
-          `${API_BASE_URL}/posts`,
-          VALID_POST_CONTENT,
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+        response = await axios.post(`${API_URL}/posts`, VALID_POST_CONTENT, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-        );
+        });
       } catch (err) {
         console.error('Failed to create post!', err);
       }
@@ -121,7 +117,7 @@ describe.sequential('POST request to create a new blog post...', () => {
 
       beforeAll(async () => {
         try {
-          response = await axios.post(`${API_BASE_URL}/posts`, postContent, {
+          response = await axios.post(`${API_URL}/posts`, postContent, {
             ...OPTIONS,
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
