@@ -4,16 +4,16 @@ import { Filter, Post, PostContent, PostIdParam } from '@/types/post.type.ts';
 import { isErrorResponse } from '@utils/typeGuards.ts';
 import { AxiosCustom } from '@/types/axios.type.ts';
 
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';
-const SERVER_API_PORT = parseInt(process.env.SERVER_API_PORT ?? '8000', 10);
-const API_BASE_URL = `${SERVER_HOSTNAME}:${SERVER_API_PORT.toString()}`;
+const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
+const API_PORT = parseInt(process.env.API_PORT ?? '3000', 10);
+const API_URL = `${SERVER_URL}:${API_PORT.toString()}`;
 const OPTIONS: AxiosRequestConfig = {
   validateStatus: (status) => status < 500,
 };
 
 export const renderAllPosts: RequestHandler = async (_req, res, next) => {
   const response: AxiosCustom<Post[]> = await axios.get(
-    `${API_BASE_URL}/posts`,
+    `${API_URL}/posts`,
     OPTIONS,
   );
 
@@ -31,7 +31,7 @@ export const renderFilteredPost: RequestHandler<
   const { search: searchText } = req.body;
 
   const response: AxiosCustom<Post[]> = await axios.get(
-    `${API_BASE_URL}/posts?filter=${searchText}`,
+    `${API_URL}/posts?filter=${searchText}`,
   );
 
   isErrorResponse(response)
@@ -52,7 +52,7 @@ export const renderEditPostById: RequestHandler<
   const { id: postId } = req.params;
 
   const response: AxiosCustom<Post> = await axios.get(
-    `${API_BASE_URL}/posts/${postId}`,
+    `${API_URL}/posts/${postId}`,
     OPTIONS,
   );
 
@@ -74,7 +74,7 @@ export const createPost: RequestHandler<
   const postContent = req.body;
 
   const response: AxiosCustom<Post> = await axios.post(
-    `${API_BASE_URL}/posts`,
+    `${API_URL}/posts`,
     postContent,
     OPTIONS,
   );
@@ -91,7 +91,7 @@ export const editPostById: RequestHandler<
   const postContent = req.body;
 
   const response: AxiosCustom<Post> = await axios.patch(
-    `${API_BASE_URL}/posts/${postId}`,
+    `${API_URL}/posts/${postId}`,
     postContent,
     OPTIONS,
   );
@@ -108,7 +108,7 @@ export const deletePostById: RequestHandler<
   const { id: postId } = req.params;
 
   const response: AxiosCustom<unknown> = await axios.delete(
-    `${API_BASE_URL}/posts/${postId}`,
+    `${API_URL}/posts/${postId}`,
     OPTIONS,
   );
 
@@ -117,7 +117,7 @@ export const deletePostById: RequestHandler<
 
 export const resetPosts: RequestHandler = async (_req, res, next) => {
   const response: AxiosCustom<Post[]> = await axios.post(
-    `${API_BASE_URL}/posts/reset`,
+    `${API_URL}/posts/reset`,
     OPTIONS,
   );
 

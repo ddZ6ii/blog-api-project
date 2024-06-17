@@ -12,11 +12,6 @@ if (opsys === 'win32') process.env.BROWSER = 'chrome';
 // macOS
 if (opsys === 'darwin') process.env.BROWSER = '/Applications/Google Chrome.app';
 
-const DEV = process.env.NODE_ENV === 'development';
-const SERVER_PORT = process.env.SERVER_API_PORT ?? '3000';
-const CLIENT_PORT = parseInt(process.env.CLIENT_APP_PORT ?? '4173', 10);
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';
-
 export default defineConfig({
   base: '/',
   root: resolve(__dirname, './'),
@@ -33,15 +28,8 @@ export default defineConfig({
   },
   preview: {
     // Vite client-server.
-    port: CLIENT_PORT,
+    port: 4173,
     open: true,
-    // Use a proxy to redirect vite client server to the backend server (cannot use the same port).
-    proxy: {
-      '/': {
-        target: `${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT}/posts`,
-        changeOrigin: true,
-      },
-    },
   },
   resolve: {
     alias: {
@@ -56,12 +44,8 @@ export default defineConfig({
   },
   server: {
     // Vite client-server.
-    port: CLIENT_PORT,
+    port: 4173,
     open: true,
-    // Use a proxy to redirect vite client server to the backend server (cannot use the same port).
-    proxy: {
-      '/': `${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT}/posts`,
-    },
   },
   test: {
     // Appent test files or folders to be excluded during test run.

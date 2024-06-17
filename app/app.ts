@@ -8,8 +8,8 @@ import { appRouter } from '@routers/app.router.ts';
 import { errorHandler } from '@middlewares/error.middleware.ts';
 
 const { DEV } = import.meta.env;
-const SERVER_PORT = parseInt(process.env.SERVER_APP_PORT ?? '8000', 10);
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';
+const SERVER_PORT = parseInt(process.env.PORT ?? '8000', 10);
+const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
 const app = express();
 
 app.set(
@@ -33,7 +33,7 @@ app.use(errorHandler);
 const _server = app.listen(SERVER_PORT, (): void => {
   console.info(
     chalk.yellow(
-      `Backend server is running on ${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT.toString()}...`,
+      `Backend server is running on ${DEV ? 'http://localhost' : SERVER_URL}:${SERVER_PORT.toString()}...`,
     ),
   );
 });

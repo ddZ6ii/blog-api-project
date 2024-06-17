@@ -8,8 +8,8 @@ import { apiRouter } from '@/routers/api.router.ts';
 import { errorHandler } from '@/middlewares/error.middleware.ts';
 
 const { DEV } = import.meta.env;
-const SERVER_PORT = parseInt(process.env.SERVER_API_PORT ?? '8000', 10);
-const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME ?? 'http://localhost';
+const API_PORT = parseInt(process.env.API_PORT ?? '3000', 10);
+const SERVER_URL = process.env.SERVER_URL ?? 'http://localhost';
 const app = express();
 
 // Initialize in-memory data store from JSON file.
@@ -28,10 +28,10 @@ app.use('/', apiRouter);
 app.use(errorHandler);
 
 // API server.
-const _server = app.listen(SERVER_PORT, (): void => {
+const _server = app.listen(API_PORT, '::', (): void => {
   console.info(
     chalk.yellow(
-      `API is running on ${DEV ? 'http://localhost' : SERVER_HOSTNAME}:${SERVER_PORT.toString()}...`,
+      `API is running on ${DEV ? 'http://localhost' : SERVER_URL}:${API_PORT.toString()}...`,
     ),
   );
 });
