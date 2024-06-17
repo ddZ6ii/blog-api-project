@@ -1,11 +1,8 @@
 {
-  "name": "blog-api-project",
+  "name": "app",
   "private": true,
   "version": "1.0.0",
-  "description": "Blog backend application",
-  "author": "Denis Dezest <denis.dezest@gmail.com>",
-  "repository": "git@github.com:ddZ6ii/blog-api-project.git",
-  "license": "ISC",
+  "description": "backend application",
   "type": "module",
   "scripts": {
     "dev": "concurrently \"sleep 1 && yarn run client\" \"yarn run server\"",

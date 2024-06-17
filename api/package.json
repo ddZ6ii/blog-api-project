@@ -1,11 +1,8 @@
 {
-  "name": "blog-api-project",
+  "name": "api",
   "private": true,
   "version": "1.0.0",
-  "description": "Private blog API",
-  "author": "Denis Dezest <denis.dezest@gmail.com>",
-  "repository": "git@github.com:ddZ6ii/blog-api-project.git",
-  "license": "ISC",
+  "description": "private blog api",
   "type": "module",
   "scripts": {
     "dev": "vite-node -w index.ts",

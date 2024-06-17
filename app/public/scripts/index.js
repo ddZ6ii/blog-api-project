@@ -1,4 +1,4 @@
-import { o as onContainerClick, a as addSpinner, d as disableUserInteractions, b as debounce, c as debounceLead, e as onLinkClick } from "./eventHandlers-Cdev2lJw.js";
+import { o as onContainerClick, a as addSpinner, d as disableUserInteractions, b as debounce, c as debounceLead, e as onLinkClick } from "./eventHandlers-CdX500FP.js";
 const containerEl = document.querySelector(".container");
 const searchFormEl = document.querySelector("#searchForm");
 const searchInputEl = document.querySelector("#search");
@@ -10,8 +10,7 @@ const debouncedOnLinkClick = debounceLead((e) => {
 });
 const debouncedOnInputChange = debounce(() => searchFormEl == null ? void 0 : searchFormEl.requestSubmit());
 window.addEventListener("load", () => {
-  if (!searchInputEl)
-    return;
+  if (!searchInputEl) return;
   searchInputEl.focus();
   if (searchInputEl.value) {
     previousSearchText = searchInputEl.value;
@@ -27,10 +26,8 @@ containerEl == null ? void 0 : containerEl.addEventListener("click", (e) => {
 searchFormEl == null ? void 0 : searchFormEl.addEventListener("submit", (e) => {
   var _a;
   e.preventDefault();
-  if (isSubmitting)
-    return;
-  if (!(searchInputEl == null ? void 0 : searchInputEl.value) && !previousSearchText)
-    return;
+  if (isSubmitting) return;
+  if (!(searchInputEl == null ? void 0 : searchInputEl.value) && !previousSearchText) return;
   searchFormEl.submit();
   (_a = searchIconEl == null ? void 0 : searchIconEl.querySelector("img")) == null ? void 0 : _a.remove();
   addSpinner(searchIconEl);

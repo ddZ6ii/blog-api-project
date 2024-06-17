@@ -1,4 +1,4 @@
-import { o as onContainerClick, c as debounceLead, e as onLinkClick, a as addSpinner, d as disableUserInteractions, f as enableUserInteractions, r as removeSpinner } from "./eventHandlers-Cdev2lJw.js";
+import { o as onContainerClick, c as debounceLead, e as onLinkClick, a as addSpinner, d as disableUserInteractions, f as enableUserInteractions, r as removeSpinner } from "./eventHandlers-CdX500FP.js";
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
@@ -773,13 +773,11 @@ const isDirty = (x) => x.status === "dirty";
 const isValid = (x) => x.status === "valid";
 const isAsync = (x) => typeof Promise !== "undefined" && x instanceof Promise;
 function __classPrivateFieldGet(receiver, state, kind, f) {
-  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
-    throw new TypeError("Cannot read private member from an object whose class did not declare it");
+  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
   return state.get(receiver);
 }
 function __classPrivateFieldSet(receiver, state, value, kind, f) {
-  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
-    throw new TypeError("Cannot write private member to an object whose class did not declare it");
+  if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
   return state.set(receiver, value), value;
 }
 typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
@@ -2501,8 +2499,7 @@ class ZodObject extends ZodType {
           });
           status.dirty();
         }
-      } else if (unknownKeys === "strip")
-        ;
+      } else if (unknownKeys === "strip") ;
       else {
         throw new Error(`Internal ZodObject error: invalid unknownKeys value.`);
       }
@@ -4239,8 +4236,7 @@ function capitalize(str = "") {
 }
 function countWords(str = "") {
   const formattedStr = str.trim().replace(/(\r\n|\n|\r)/gm, " ");
-  if (!formattedStr)
-    return 0;
+  if (!formattedStr) return 0;
   return formattedStr.split(" ").filter((word) => word !== "").length;
 }
 function pluralize(word = "", count) {
@@ -4390,15 +4386,13 @@ function useForm(formEl2, schema, onSubmit2) {
     focusFirstInvalidField();
   }
   function validateField(fieldName, fieldValue) {
-    if (!isSchemaZodObject(schema))
-      return;
+    if (!isSchemaZodObject(schema)) return;
     const result = schema.shape[fieldName].safeParse(fieldValue);
     if (result.success) {
       state.data[fieldName] = result.data;
     } else {
       const fieldErrors = result.error.flatten().formErrors;
-      if (!fieldErrors)
-        return;
+      if (!fieldErrors) return;
       showFieldError(fieldName, fieldErrors);
     }
   }
@@ -4408,15 +4402,12 @@ function useForm(formEl2, schema, onSubmit2) {
     });
   }
   function clearFieldErrors(fieldName) {
-    if (typeof fieldName !== "string")
-      return;
+    if (typeof fieldName !== "string") return;
     const fieldEl = formEl2.elements.namedItem(fieldName);
-    if (!fieldEl || !isFieldElement(fieldEl))
-      return;
+    if (!fieldEl || !isFieldElement(fieldEl)) return;
     fieldEl.classList.remove("has-error");
     const listEl = fieldEl.nextElementSibling;
-    if (!listEl || !(listEl instanceof HTMLUListElement))
-      return;
+    if (!listEl || !(listEl instanceof HTMLUListElement)) return;
     listEl.remove();
     if (fieldName in state.error) {
       delete state.error[fieldName];
@@ -4425,8 +4416,7 @@ function useForm(formEl2, schema, onSubmit2) {
   function showFormErrors() {
     Object.entries(state.error).forEach(
       ([fieldName, fieldErrorMessages]) => {
-        if (!fieldErrorMessages)
-          return;
+        if (!fieldErrorMessages) return;
         showFieldError(fieldName, fieldErrorMessages);
       }
     );
@@ -4435,8 +4425,7 @@ function useForm(formEl2, schema, onSubmit2) {
     var _a;
     const listEl = createErrorListNode(errorMessages);
     const fieldEl = formEl2.elements.namedItem(fieldName);
-    if (!fieldEl || !isFieldElement(fieldEl))
-      return;
+    if (!fieldEl || !isFieldElement(fieldEl)) return;
     fieldEl.classList.add("has-error");
     (_a = fieldEl.parentNode) == null ? void 0 : _a.append(listEl);
     state.error[fieldName] = errorMessages;
@@ -4454,11 +4443,9 @@ function useForm(formEl2, schema, onSubmit2) {
   }
   function focusFirstInvalidField() {
     const fieldName = objectKeys(state.error)[0];
-    if (!fieldName || typeof fieldName !== "string")
-      return;
+    if (!fieldName || typeof fieldName !== "string") return;
     const fieldEl = formEl2.elements.namedItem(fieldName);
-    if (!fieldEl || !(fieldEl instanceof HTMLElement))
-      return;
+    if (!fieldEl || !(fieldEl instanceof HTMLElement)) return;
     fieldEl.focus();
   }
   return {
@@ -4492,8 +4479,7 @@ const debouncedOnLinkClick = debounceLead((e) => {
   onLinkClick(e);
 });
 window.addEventListener("load", () => {
-  if (!formEl)
-    return;
+  if (!formEl) return;
   formEl.noValidate = true;
 });
 containerEl == null ? void 0 : containerEl.addEventListener("click", (e) => {
@@ -4509,8 +4495,7 @@ if (formEl) {
   });
   formEl.addEventListener("change", (e) => {
     const targetEl = e.target;
-    if (!targetEl || !isFieldElement(targetEl))
-      return;
+    if (!targetEl || !isFieldElement(targetEl)) return;
     const match = objectKeys(form.state.error).find(
       (formError) => formError === targetEl.name
     );
@@ -4523,8 +4508,7 @@ if (formEl) {
 async function onSubmit(validatedData) {
   try {
     const url = formEl == null ? void 0 : formEl.getAttribute("action");
-    if (!formEl || !url)
-      return;
+    if (!formEl || !url) return;
     addSpinner(
       formEl.querySelector('button[type="submit"]')
     );

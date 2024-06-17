@@ -28,26 +28,21 @@ const linkEls = document.querySelectorAll("a");
 const buttonEls = document.querySelectorAll("button");
 const nodeEls = [...fieldsetEls, ...linkEls, ...buttonEls];
 function onLinkClick(evt) {
-  if (!(evt.target instanceof HTMLAnchorElement))
-    return;
-  if (evt.target.classList.contains("link-disabled"))
-    return;
+  if (!(evt.target instanceof HTMLAnchorElement)) return;
+  if (evt.target.classList.contains("link-disabled")) return;
   location.href = evt.target.href;
 }
 function onContainerClick(evt, cbFn) {
-  if (!(evt.target instanceof HTMLAnchorElement))
-    return;
+  if (!(evt.target instanceof HTMLAnchorElement)) return;
   evt.preventDefault();
   cbFn(evt);
   addSpinner(evt.target);
   disableUserInteractions();
 }
 function addSpinner(nodeEl) {
-  if (!nodeEl)
-    return;
+  if (!nodeEl) return;
   const isDisabled = nodeEl instanceof HTMLButtonElement && nodeEl.disabled || nodeEl instanceof HTMLAnchorElement && nodeEl.classList.contains("link-disabled");
-  if (isDisabled)
-    return;
+  if (isDisabled) return;
   const spinnerEl = document.createElement("span");
   spinnerEl.classList.add("spinner");
   if (!(nodeEl instanceof HTMLDivElement)) {
@@ -60,8 +55,7 @@ function addSpinner(nodeEl) {
 }
 function removeSpinner() {
   const spinnerEl = document.querySelector(".spinner");
-  if (!spinnerEl)
-    return;
+  if (!spinnerEl) return;
   spinnerEl.remove();
 }
 function disableUserInteractions() {

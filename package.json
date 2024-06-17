@@ -1,8 +1,10 @@
 {
   "name": "blog-api-project",
-  "private": true,
   "version": "1.0.0",
-  "description": "A blog app with private API",
+  "author": "Denis Dezest <denis.dezest@gmail.com>",
+  "description": "blog app with private API",
+  "repository": "git@github.com:ddZ6ii/blog-api-project.git",
+  "license": "ISC",
   "keywords": [
     "backend",
     "API",
@@ -12,23 +14,16 @@
     "template engine",
     "ejs"
   ],
-  "author": "Denis Dezest <denis.dezest@gmail.com>",
-  "repository": "git@github.com:ddZ6ii/blog-api-project.git",
-  "license": "ISC",
   "type": "module",
+  "private": true,
+  "workspaces": [
+    "api",
+    "app"
+  ],
   "scripts": {
-    "install": "concurrently \"yarn run install:api\" \"yarn run install:app\"",
-    "start": "concurrently \"yarn run start:api\" \"yarn run start:app\"",
-    "build": "concurrently \"yarn run build:api\" \"yarn run build:app\"",
-    "dev": "concurrently \"yarn run dev:api\" \"yarn run dev:app\"",
-    "install:api": "cross-env-shell \"cd ./api/ && yarn\"",
-    "start:api": "cross-env-shell \"cd ./api/ && yarn run start\"",
-    "build:api": "cross-env-shell \"cd ./api/ && yarn run build\"",
-    "dev:api": "cross-env-shell \"cd ./api/ && yarn run dev\"",
-    "install:app": "cross-env-shell \"cd ./app/ && yarn\"",
-    "start:app": "cross-env-shell \"cd ./app/ && yarn run start\"",
-    "build:app": "cross-env-shell \"cd ./app/ && yarn run build\"",
-    "dev:app": "cross-env-shell \"cd ./app/ && yarn run dev\""
+    "dev": "concurrently \"yarn workspace api dev\" \"yarn workspace app dev\"",
+    "build": "concurrently \"yarn workspace api build\" \"yarn workspace app build\"",
+    "start": "concurrently \"yarn workspace api start\" \"yarn workspace app start\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
